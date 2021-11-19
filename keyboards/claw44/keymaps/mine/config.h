@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD_PER_KEY             // key毎に 許容ホールドを設定する
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY     // key毎に hold機能優先を設定する
 #define IGNORE_MOD_TAP_INTERRUPT_PER_KEY    // key毎に モッドタップ割り込み無視を設定する
+#define TAPPING_FORCE_HOLD_PER_KEY          // key毎に タッピング強制holdを設定する
 
 // LCTL + ", RCTL + '
 #define LCPO_KEYS   KC_LCTL, KC_LSFT, KC_2  // [LCTL] + ["]
