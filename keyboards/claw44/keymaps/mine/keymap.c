@@ -21,65 +21,61 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 
+#include "keymap_jp.h"  // JPキーボードシンボル
+
 enum layer_number {
     _QWERTY = 0,
     _RAISE,
     _LOWER,
-    _ADJUST,
 };
 
-#define KC_L_SPC LT(_LOWER, KC_SPC)  // lower
-#define KC_R_ENT LT(_RAISE, KC_ENT)  // raise
-#define KC_G_JA LGUI_T(KC_LANG1)     // cmd or win
-#define KC_G_EN LGUI_T(KC_LANG2)     // cmd or win
-#define KC_C_BS LCTL_T(KC_BSPC)      // ctrl
-#define KC_A_DEL ALT_T(KC_DEL)       // alt
+#define K_R_SPC     LT(_RAISE, KC_SPC)   // raise + Space
+#define K_L_BS      LT(_LOWER, KC_BSPC)  // lower + BS
+#define K_L_ENT     LT(_LOWER, KC_ENT)   // lower + Enter
+#define K_C_CLN     RCTL_T(JP_COLN)     // CTL  + :
+#define K_S_BSL     RSFT_T(JP_BSLS)     // SFT  + "\"
+#define K_C_F13     LCTL_T(KC_F13)      // CTL  + F13(launcher)
+#define K_S_PSCR    LSFT_T(KC_PSCR)
+#define K_S_CIRC    RSFT_T(JP_CIRC)
+//KC_LCPO   LCTL + "
+//KC_RCPC   RCTL + '
+#define K_S_F       LSFT_T(KC_F)    // ホームポジションにモディファイアを置いてみる
+#define K_S_J       RSFT_T(KC_J)    // ホームポジションにモディファイアを置いてみる
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        KC_ESC , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , KC_MINS,
+        KC_TAB , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , JP_AT  ,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        KC_TAB , KC_A   , KC_S    , KC_D   , KC_F    , KC_G   ,     KC_H   , KC_J    , KC_K   , KC_L    , KC_SCLN, KC_QUOT,
+        K_C_F13, KC_A   , KC_S    , KC_D   , K_S_F   , KC_G   ,     KC_H   , K_S_J   , KC_K   , KC_L    , JP_SCLN, K_C_CLN,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, KC_RSFT,
+        KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, K_S_BSL,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                          KC_A_DEL, KC_G_EN, KC_L_SPC, KC_C_BS,     KC_C_BS, KC_R_ENT, KC_G_JA, KC_A_DEL
+                          KC_LALT , K_L_BS , K_R_SPC , KC_LWIN,    KC_RWIN , K_R_SPC , K_L_ENT, KC_RALT 
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 
     [_RAISE] = LAYOUT( \
-    //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-        _______, KC_BSLS, KC_CIRC, KC_EXLM, KC_AMPR, KC_PIPE,     KC_AT  , KC_EQL , KC_PLUS, KC_ASTR, KC_PERC, KC_MINS,
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        KC_LPRN, KC_HASH, KC_DLR , KC_DQT , KC_QUOT, KC_TILD,     KC_LEFT, KC_DOWN,  KC_UP , KC_RGHT, KC_GRV , KC_RPRN,
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        _______, _______, _______, _______, KC_LCBR, KC_LBRC,     KC_RBRC, KC_RCBR, _______, _______, _______, _______,
-    //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                          _______, _______, _______, _______,     _______, _______, _______, RESET
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+       JP_PIPE , KC_F14 , KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL , \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+       KC_LCPO , JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, KC_RCPC, \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+       K_S_PSCR, JP_EXLM, JP_HASH , JP_DLR , JP_PERC , JP_TILD,    JP_UNDS , KC_ENT , JP_LCBR , JP_RCBR , JP_AMPR,K_S_CIRC, \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+                          _______, _______, _______, _______,     _______, _______, _______, _______
     //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
     ),
 
     [_LOWER] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-        KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  ,     _______, KC_EQL , KC_PLUS, KC_ASTR, KC_PERC, KC_MINS,
+        KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,     KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , \
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        _______, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,     KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______,
+        KC_LCTL,  JP_1  , JP_2   , JP_3   , JP_4   , JP_5   ,     JP_6   , JP_7   , JP_8   , JP_9   , JP_0   , KC_RCTL, \
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 ,     _______, _______, KC_COMM, KC_DOT , KC_SLSH, _______,
+        KC_LSFT, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, KC_RSFT, \
     //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                          RESET  , _______, _______, _______,     _______, _______, _______, _______
-    //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
-    ),
-    [_ADJUST] = LAYOUT(
-    //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-    //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                         KC_TRNS, KC_TRNS, KC_TRNS , KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+                          RESET  , _______, _______, _______,     _______, _______, _______, RESET
     //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
     ),
 };
@@ -96,9 +92,6 @@ void render_layer_state(void) {
             break;
         case _LOWER:
             oled_write_ln_P(PSTR("Layer: Lower"), false);
-            break;
-        case _ADJUST:
-            oled_write_ln_P(PSTR("Layer: Adjust"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Layer: Undefined"), false);
@@ -163,3 +156,77 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 #endif
+
+
+/*----------------------------------------------------------------------------------*/
+/* hold動作時間の設定(親指・小指キーは長めにする)                                   */
+/*----------------------------------------------------------------------------------*/
+#define TAPPING_TERM_LONG   (300)
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    const uint8_t row = record->event.key.row;
+    const uint8_t col = record->event.key.col;
+    if((col <= 1) || (row == 3) || (row == 7)) {        // col == 0,1 or row == 3, 7
+        return TAPPING_TERM_LONG;
+    }
+    else {
+        return TAPPING_TERM;
+    }
+}
+
+
+
+/*----------------------------------------------------------------------------------*/
+/* layerキーを短時間でrolling入力したときlayerキーとして動作させる                  */
+/* (設定変更しないと短時間入力はtapとして解釈されてしまう)                          */
+/*----------------------------------------------------------------------------------*/
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    // recordの row, colを使うと正しく判定できないので keycodeを使う
+    // const uint8_t row = record->event.key.row;
+    // const uint8_t col = record->event.key.col;
+    
+    switch(keycode) {
+    case K_R_SPC:
+    case K_L_BS:
+    case K_L_ENT:
+        return true;
+        break;
+    default:
+        return false;
+        break;
+    }
+}
+
+
+/*----------------------------------------------------------------------------------*/
+/* モッドタップ割り込みの無視                                                       */
+/* (通常キーに配置したモッドタップは割り込みを禁止する)                             */
+/*----------------------------------------------------------------------------------*/
+bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case K_S_F:
+    case K_S_J:
+        return true;
+        break;
+    default:
+        return false;
+    }
+}
+
+
+/*----------------------------------------------------------------------------------*/
+/* 許容ホールド                                                                     */
+/* (通常キーに配置したモッドタップは許容ホールド設定する)                           */
+/*----------------------------------------------------------------------------------*/
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case K_S_F:
+    case K_S_J:
+        return true;
+        break;
+    default:
+        return false;
+    }
+}
+
+
