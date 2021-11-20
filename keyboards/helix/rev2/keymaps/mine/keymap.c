@@ -65,8 +65,15 @@ typedef struct {
   uint16_t  keycode;  /* 最後のキーコード */
 } layer_ctrl_t;
 
+enum LayerState_e_t {
+  LayerStateInit,     // 初期状態
+  LayerStateDown,     // 押下開始状態
+  LayerStateModHold,  // ModをHoldしている状態
+  LayerStateHold,     // KeyをHoldしている状態
+};
 
-#define TAPPING_TERM2   10    // メインキーのタッピング
+
+#define TAPPING_TERM2  50    // メインキーのタッピング
 static const layer_def_t layer_def[] = {
   { false, _L_EDIT,   KC_SPC,  TAPPING_TERM, },  /* LM0 */
   { false, _L_EDIT,   KC_SPC,  TAPPING_TERM, },  /* LM1 */
@@ -75,17 +82,19 @@ static const layer_def_t layer_def[] = {
   { false, _L_MAC,    KC_F23,  TAPPING_TERM, },  /* LM4 */
   { false, _L_ADJUST, KC_TAB,  TAPPING_TERM, },  /* LM5 */
   { false, _L_ADJUST, JP_AT,   TAPPING_TERM, },  /* LM6 */
-//  { true,  _L_EDIT,   KC_F,    TAPPING_TERM2, },  /* LM7 */
-//  { true,  _L_EDIT,   KC_G,    TAPPING_TERM2, },  /* LM8 */
-//  { true,  _L_EDIT,   KC_H,    TAPPING_TERM2, },  /* LM9 */
-//  { true,  _L_EDIT,   KC_J,    TAPPING_TERM2, },  /* LM10 */
+  { true,  _L_EDIT,   KC_F,    TAPPING_TERM2, },  /* LM7 */
+  { true,  _L_EDIT,   KC_G,    TAPPING_TERM2, },  /* LM8 */
+  { true,  _L_EDIT,   KC_H,    TAPPING_TERM2, },  /* LM9 */
+  { true,  _L_EDIT,   KC_J,    TAPPING_TERM2, },  /* LM10 */
 };
 static layer_ctrl_t layer_ctrl[sizeof(layer_def)/sizeof(layer_def[0])] = {0, };
-static uint16_t layer_ctrl_interrupted = 0;
+static uint8_t  layer_ctrl_wait = 0;  /* 待ち状態キー番号, 0=(なし), 1...=(ワンショットレイヤー番号+1)  */
+static uint16_t layer_ctrl_time = 0;  /* 待ち状態開始時刻 */
 static uint8_t  layer_cnt[_L_MAX] = {0,};     /* レイヤーキーが複数押されているケース対応 */
 
-static inline void process_user_custom_layer_otherkey_down(void);
 static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uint8_t no);
+static bool process_user_custom_layer_otherkey_down(void);
+static void process_user_custom_layer_time_check(void);
 
 #if 0
 /* コンボキー */
@@ -135,6 +144,14 @@ const keypos_t hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
   {{0, 2}, {1, 2}, {2, 2}, {3, 2}, {4, 2}, {5, 2}, {6, 2}}, 
   {{0, 3}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}, {6, 3}}, 
 };
+
+// 独自レイヤー定義
+const uint8_t defMineKeyCode[MATRIX_ROWS][MATRIX_COLS] = LAYOUT(  \
+   6,  0,  0,  0,  0,  0        ,  0,  0,  0,  0,  0,  7,       \
+   0,  0,  0,  0,  8,  9        , 10, 11,  0,  0,  0,  0,       \
+   0,  0,  0,  0,  0,  0        ,  0,  0,  0,  0,  0,  0,       \
+   0,  0,  0,  0,  3,  1,  0,  5,  2,  4,  0,  0 , 0,  0        \
+);
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -293,8 +310,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint8_t fn_tracker = 0; /* F22, F23のワンショットファンクション */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  /* ワンショットレイヤー処理でキー押下イベントで状態遷移 */
+  if(record->event.pressed) {
+    bool ret = process_user_custom_layer_otherkey_down();    // 他キーdownによるレイヤー遷移
+    if (ret) {
+      // 状態変化があったら keycodeを更新
+      keycode = get_record_keycode(record, true);  // 状態遷移による新しいキーコードの取得
+    }
+  }
   
+  /* キー位置対応でのワンショットレイヤー処理 */
   {
+    const uint8_t col = record->event.key.col;
+    const uint8_t row = record->event.key.row;
+    const uint8_t no = defMineKeyCode[row][col];
+    if(no) {
+      return process_user_custom_layer(keycode, record, no);
+    }
+    #if 0
     /* キー位置基準でレイヤー操作 */
     const uint8_t col = record->event.key.col;
     const uint8_t row = record->event.key.row;
@@ -303,14 +336,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if((row == 0) && (col == 0)) {
       no = 5;
     }
-//    else if(row == 1) {
-//      if(col == 4) {
-//        no = 7;
-//      }
-//      else if(col == 5) {
-//        no = 8;
-//      }
-//    }
+    else if(row == 1) {
+      if(col == 4) {
+        no = 7;
+      }
+      else if(col == 5) {
+        no = 8;
+      }
+    }
     else if(row == 3) {
       if(col == 4) {
         no = 2;
@@ -322,14 +355,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     else if((row == 4) && (col == 0)) {
       no = 6;
     }
-//    else if(row == 5) {
-//      if(col == 5) {
-//        no = 9;
-//      }
-//      else if(col == 4) {
-//        no = 10;
-//      }
-//    }
+    else if(row == 5) {
+      if(col == 5) {
+        no = 9;
+      }
+      else if(col == 4) {
+        no = 10;
+      }
+    }
     else if(row == 7) {
       if(col == 4) {
         no = 3;
@@ -345,6 +378,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if(no != 0xff) {
       return process_user_custom_layer(keycode, record, no);
     }
+    #endif
   }
   
   switch (keycode) {
@@ -383,6 +417,11 @@ void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 
+/* マトリックススキャンタイミングで呼び出す */
+void matrix_scan_user(void) {
+  process_user_custom_layer_time_check();
+}
+
 /*--------------------------------------------------------------------------------*/
 /* タッピング時間切り替え(親指・小指キーを長時間とする                            */
 /*--------------------------------------------------------------------------------*/
@@ -402,64 +441,136 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 /*--------------------------------------------------------------------------------*/
 /* ワンショットレイヤーカスタマイズ                                               */
 /*--------------------------------------------------------------------------------*/
-/* 他キーの tapが入ったときに呼び出す(状態変数ビットを1にするだけ) */
-static inline void process_user_custom_layer_otherkey_down(void) {
-  layer_ctrl_interrupted = -1;  /* 全ビット on */
-}
-
 /* レイヤー制御関数 */
 /* 1tap  : tap "key"  */
 /* 1hold : "layer" on */
 /* 2tap  : tap "key"  */
 /* 2hold : hold "key" */
-static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uint8_t no) {
+static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uint8_t no_in) {
+  const uint8_t no = no_in - 1;
   const layer_def_t*  const def = &layer_def[no];
   layer_ctrl_t* const ctrl = &layer_ctrl[no];
   
   if (record->event.pressed) {
     /* keydownイベント */
-    if (((ctrl->state == 0) || ((record->event.time - ctrl->time) > def->tapping_term))) {
+    if ((record->event.time - ctrl->time) > def->tapping_term) {
       /* 初回 Down */
-      layer_on(def->layer);
-      layer_cnt[def->layer]++;
-      ctrl->state = 0;
+      if(!def->retro) { // Mod優先時はMod操作操作する
+        layer_on(def->layer);
+        layer_cnt[def->layer]++;
+      }
+      
+      // Down状態に待ち処理付きで入る
+      layer_ctrl_wait = no + 1;
+      layer_ctrl_time = timer_read();
+      ctrl->state = LayerStateDown;
+      ctrl->keycode = keycode;
     }
     else {
-      /* 2回目 Down */
+      /* 2回目 Down → Hold動作 */
       register_code16(keycode);
       ctrl->keycode = keycode;
-      ctrl->state = 1;
+      ctrl->state = LayerStateHold;
     }
+    // 時刻記録
     ctrl->time = record->event.time;
-    layer_ctrl_interrupted &= ~( 1U << no); /* 他キー割り込み検出 */
   }
   else {
     /* keyupイベント */
-    if(ctrl->state == 0) {
-      /* 初回 Up */
+    if(ctrl->state == LayerStateDown) {
+      /* Up */
+      if (!def->retro) {  // Mod優先時はMod操作する
+        /* レイヤーキーがすべて離されたらレイヤーをOFFにする */
+        layer_cnt[def->layer]--;
+        if(layer_cnt[def->layer] == 0) {
+          layer_off(def->layer);
+        }
+      }
+      
+      /* タップ動作 */
+      tap_code16(keycode);
+      // 状態遷移
+      ctrl->state = LayerStateInit;
+      layer_ctrl_wait = 0;            // 待状態を終了
+    }
+    else if(ctrl->state == LayerStateModHold) {
       /* レイヤーキーがすべて離されたらレイヤーをOFFにする */
       layer_cnt[def->layer]--;
       if(layer_cnt[def->layer] == 0) {
         layer_off(def->layer);
       }
-      /* タッピング判定:以下(1)(2)がともに成立 */
-      /* (1)割り込みなし */
-      /* (2)レトロ定義あり or 規定時間内にキー離されている */
-      if(!(layer_ctrl_interrupted & (1U << no))
-      && (def->retro || ((record->event.time - ctrl->time) <= def->tapping_term))) {
-        /* タッピング */
-        tap_code16(keycode);
-      }
+      // 状態遷移
+      ctrl->state = LayerStateInit;
     }
-    else {
-      /* 2回目Up */
+    else if(ctrl->state == LayerStateHold) {
+      // キーup処理
       unregister_code16(ctrl->keycode);
+      // 状態遷移
+      ctrl->state = LayerStateInit;
     }
     /* Up時刻記録 */
     ctrl->time = record->event.time;
   }
   return false;
 }
+
+
+/* 他キーの tapが入ったときに呼び出す(状態変数ビットを1にするだけ) */
+static bool process_user_custom_layer_otherkey_down(void) {
+  if(layer_ctrl_wait) {
+    const uint8_t no = layer_ctrl_wait - 1;
+    const layer_def_t*  const def = &layer_def[no];
+    layer_ctrl_t* const ctrl = &layer_ctrl[no];
+    
+    if(def->retro) {
+      // Hold優先時はここで初めてModを有効にする(→直後にMod対応でlキーが押される)
+      layer_on(def->layer);
+      layer_cnt[def->layer]++;
+    }
+    else {
+      // Mod優先時は何もしない
+    }
+    
+    // 待ち状態終了    
+    ctrl->state = LayerStateModHold;
+    layer_ctrl_wait = 0;
+    return true;
+  }
+  return false;
+}
+
+
+static void process_user_custom_layer_time_check(void) {
+  if (layer_ctrl_wait) {
+    // 時間待ち中のみ処理(負荷低減のため)
+    const uint8_t no = layer_ctrl_wait - 1;
+    
+    const layer_def_t*  const def = &layer_def[no];
+    layer_ctrl_t* const ctrl = &layer_ctrl[no];
+    
+    if(timer_elapsed(layer_ctrl_time) > def->tapping_term) {
+      // 待ちイベント時刻終了を検出
+      if(def->retro) {  // Hold優先時はキーを押す
+        ctrl->state = LayerStateHold;
+        
+        // キーdown処理
+        register_code16(ctrl->keycode);
+      }
+      else {
+        // Mod優先時はModHold状態に遷移
+        ctrl->state = LayerStateModHold;
+      }
+      
+      // 待ち状態解除
+      layer_ctrl_wait = 0;
+    }
+  }
+  else {
+    // 基準時刻を現在に更新する
+    layer_ctrl_time = timer_read();
+  }
+}
+
 
 #ifdef SSD1306OLED
   #include "ssd1306.h"
@@ -474,5 +585,7 @@ void matrix_init_user(void) {
         iota_gfx_init(!has_usb());   // turns on the display
     #endif
 }
+
+
 
   
