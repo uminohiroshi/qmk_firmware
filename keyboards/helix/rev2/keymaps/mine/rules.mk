@@ -10,12 +10,12 @@ LTO_ENABLE = yes  # if firmware size over limit, try this option
 # Helix Spacific Build Options
 # you can uncomment and edit follows 7 Variables
 #  jp: 以下の7つの変数を必要に応じて編集し、コメントアウトをはずします。
-# HELIX_ROWS = 5              # Helix Rows is 4 or 5
-# OLED_ENABLE = no            # OLED_ENABLE
+HELIX_ROWS = 4              # Helix Rows is 4 or 5
+OLED_ENABLE = yes           # OLED_ENABLE
 # LOCAL_GLCDFONT = no         # use each keymaps "helixfont.h" insted of "common/glcdfont.c"
 # LED_BACK_ENABLE = no        # LED backlight (Enable WS2812 RGB underlight.)
-# LED_UNDERGLOW_ENABLE = no   # LED underglow (Enable WS2812 RGB underlight.)
-# LED_ANIMATIONS = yes        # LED animations
+LED_UNDERGLOW_ENABLE = yes  # LED underglow (Enable WS2812 RGB underlight.)
+LED_ANIMATIONS = yes        # LED animations
 # IOS_DEVICE_ENABLE = no      # connect to IOS device (iPad,iPhone)
 
 # OLED_ENABLE が yes のとき
@@ -29,6 +29,13 @@ OLED_SELECT = core
 ifeq ($(strip $(OLED_ENABLE)), yes)
     SRC += oled_display.c
 endif
+
+# 自分用設定
+CONSOLE_ENABLE = no
+COMBO_ENABLE = no		# COMBOを使わない
+MOUSEKEY_ENABLE = no		# マウス操作を使う → メモリが不足するので無効化。
+TAP_DANCE_ENABLE = no		# タップダンスわない
+EXTRAKEY_ENABLE = yes		# メディアキーを有効にする
 
 # convert Helix-specific options (that represent combinations of standard options)
 #   into QMK standard options.
