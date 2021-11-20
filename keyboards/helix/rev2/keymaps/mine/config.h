@@ -36,3 +36,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    //#define RGBLIGHT_EFFECT_RGB_TEST
    //#define RGBLIGHT_EFFECT_ALTERNATING
 #endif
+
+// COMBOを使う
+#define COMBO_COUNT 6
+#define COMBO_TERM  10
+
+// 各種基本設定
+#define TAPPING_TERM_PER_KEY
+#undef PERMISSIVE_HOLD
+#undef IGNORE_MOD_TAP_INTERRUPT
+#undef TAPPING_FORCE_HOLD
+#undef RETRO_TAPPING
+
+// スワップハンド有効化
+#define SWAP_HANDS_ENABLE
+
