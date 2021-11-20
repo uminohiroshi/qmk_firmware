@@ -164,6 +164,10 @@ const uint8_t defMineKeyCode[MATRIX_ROWS][MATRIX_COLS] = LAYOUT(  \
 #define K_OLALT OSM(MOD_LALT)     // LALTワンショット
 #define K_ORALT OSM(MOD_RALT)     // RALTワンショット
 
+#define K_C_DQUO LCTL_T(JP_DQUO)
+#define K_S_PIPE LSFT_T(JP_PIPE)
+#define K_C_PERC RCTL_T(JP_PERC)
+#define K_S_CIRC RSFT_T(JP_CIRC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_L_DEFAULT] = LAYOUT( \
@@ -174,17 +178,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
         KC_LSFT, K_S_Z  , KC_X   , KC_C   , KC_V   , KC_B                     , KC_N   , KC_M   , KC_COMM, KC_DOT , K_S_SLS, K_S_BSL, \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
-        SH_MON , MO(8)  , K_OLWIN, K_OLALT,KC_BSPC , KC_SPC , KC_NO  , KC_NO  , KC_SPC , KC_ENT , K_ORALT, K_ORWIN, MO(9)  , SH_MON   \
+        KC_RCTL, SH_MON , K_OLWIN, K_OLALT,KC_BSPC , KC_SPC , KC_SPC , KC_F23 , KC_SPC , KC_ENT , K_ORALT, K_ORWIN, SH_MON , KC_RCTL  \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
     ),
 
     [_L_EDIT] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
-        JP_PIPE, KC_PSCR, KC_HOME, KC_UP  , KC_END , KC_PGUP                  , JP_TILD, JP_LPRN, JP_RPRN, JP_EQL , JP_MINS, JP_CIRC, \
+        JP_QUOT, KC_PSCR, KC_HOME, KC_UP  , KC_END , KC_PGUP                  , JP_EXLM, JP_LPRN, JP_RPRN, JP_AMPR, JP_MINS, JP_EQL , \
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
-        _______, JP_ZKHK, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN                  , KC_BSPC, KC_ESC , KC_DEL , JP_HENK, JP_MHEN, _______, \
+       K_C_DQUO, JP_ZKHK, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN                  , KC_BSPC, KC_ESC , KC_DEL , JP_HENK, JP_MHEN,K_C_PERC, \
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
-        _______, JP_RCBR, JP_LCBR, KC_NO  , KC_NO  , KC_F14                   , JP_UNDS, KC_ENT , KC_NO  , JP_LBRC, JP_RBRC, _______, \
+       K_S_PIPE, JP_LCBR, JP_RCBR, JP_LBRC, JP_RBRC, KC_F14                   , JP_UNDS, KC_ENT , JP_DLR , JP_HASH, JP_TILD,K_S_CIRC, \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______  \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
@@ -216,9 +220,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_L_MAC] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
-        _______, KC_MSTP, KC_MPLY, KC_MYCM, KC_CALC, KC_NO                    , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+        _______, KC_MSTP, KC_MPLY, KC_MYCM, KC_CALC, KC_NO                    , KC_NO  , KC_CALC, KC_MYCM, KC_MPLY, KC_MSTP, _______, \
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
-        _______, KC_MPRV, KC_MNXT, KC_VOLD, KC_VOLU, KC_MUTE                  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+        _______, KC_MPRV, KC_MNXT, KC_VOLD, KC_VOLU, KC_MUTE                  , KC_MUTE, KC_VOLU, KC_VOLD, KC_MNXT, KC_MPRV, _______, \
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
         _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO                    , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
