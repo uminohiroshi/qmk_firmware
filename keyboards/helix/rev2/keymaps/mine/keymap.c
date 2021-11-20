@@ -53,6 +53,7 @@ int RGB_current_mode;
 /* “Æ©ƒŒƒCƒ„ƒRƒ“ƒgƒ[ƒ‹ */
 typedef struct {
   uint8_t   retro;    /* ’P‘Å‚É•K‚¸ƒ^ƒbƒsƒ“ƒO“®ì‚·‚é(true)/ƒ^ƒCƒ€ƒAƒEƒg‚·‚é(false) */
+  uint8_t   ownlayer; /* home layer(true) / qmk layer(false) */
   uint8_t   layer;    /* ƒŒƒCƒ„[”Ô† */
   uint16_t  keycode;  /* 16bitƒL[ƒR[ƒh */
   uint16_t  tapping_term; /* ƒ^ƒbƒv”»’èŠÔ */
@@ -71,19 +72,19 @@ enum LayerState_e_t {
   LayerStateHold,     // Key‚ğHold‚µ‚Ä‚¢‚éó‘Ô
 };
 
-
-#define TAPPING_TERM2  10    // ƒƒCƒ“ƒL[‚Ìƒ^ƒbƒsƒ“ƒO
+#define TAPPING_TERM2  30    // ƒƒCƒ“ƒL[‚Ìƒ^ƒbƒsƒ“ƒO
+#define TAPPING_TERM3  30    // ƒƒCƒ“ƒL[‚Ìƒ^ƒbƒsƒ“ƒO
 static const layer_def_t layer_def[] = {
-  { false, _L_EDIT,   KC_SPC,  TAPPING_TERM, },  /* LM0 */
-  { false, _L_EDIT,   KC_SPC,  TAPPING_TERM, },  /* LM1 */
-  { false, _L_MARK,   KC_BSPC, TAPPING_TERM, },  /* LM2 */
-  { false, _L_FUNC,   KC_ENT,  TAPPING_TERM, },  /* LM3 */
-  { false, _L_MAC,    KC_F23,  TAPPING_TERM, },  /* LM4 */
-  { false, _L_ADJUST, KC_TAB,  TAPPING_TERM, },  /* LM5 */
-  { false, _L_ADJUST, JP_AT,   TAPPING_TERM, },  /* LM6 */
-//  { true,  _L_EDIT,   KC_F,    TAPPING_TERM2, },  /* LM7 */
-//  { true,  _L_EDIT,   KC_G,    TAPPING_TERM2, },  /* LM8 */
-//  { true,  _L_EDIT,   KC_H,    TAPPING_TERM2, },  /* LM9 */
+  { false, false, _L_EDIT,   KC_SPC,  TAPPING_TERM, },  /* LM0 */
+  { false, false, _L_EDIT,   KC_SPC,  TAPPING_TERM, },  /* LM1 */
+  { false, false, _L_MARK,   KC_BSPC, TAPPING_TERM, },  /* LM2 */
+  { false, false, _L_FUNC,   KC_ENT,  TAPPING_TERM, },  /* LM3 */
+  { false, false, _L_MAC,    KC_F23,  TAPPING_TERM, },  /* LM4 */
+  { false, false, _L_ADJUST, KC_TAB,  TAPPING_TERM, },  /* LM5 */
+  { false, false, _L_ADJUST, JP_AT,   TAPPING_TERM, },  /* LM6 */
+  { true,  true,  1,         KC_F,    TAPPING_TERM2, },  /* LM7 */
+  { true,  true,  2,         KC_H,    TAPPING_TERM3, },  /* LM8 */
+//  { true,  _L_EDIT,   KC_G,    TAPPING_TERM2, },  /* LM9 */
 //  { true,  _L_EDIT,   KC_J,    TAPPING_TERM2, },  /* LM10 */
 };
 static layer_ctrl_t layer_ctrl[sizeof(layer_def)/sizeof(layer_def[0])] = {0, };
@@ -91,10 +92,17 @@ static uint8_t  layer_ctrl_wait = 0;  /* ‘Ò‚¿ó‘ÔƒL[”Ô†, 0=(‚È‚µ), 1...=(ƒƒ“ƒ
 static uint16_t layer_ctrl_time = 0;  /* ‘Ò‚¿ó‘ÔŠJn */
 static uint8_t  layer_cnt[_L_MAX] = {0,};     /* ƒŒƒCƒ„[ƒL[‚ª•¡”‰Ÿ‚³‚ê‚Ä‚¢‚éƒP[ƒX‘Î‰ */
 
+
+uint8_t gHmodLayer = 0;
+static uint8_t gHmodLastLayer[50] = {0, };
+
 static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uint8_t no);
 static bool process_user_custom_layer_otherkey_down(void);
 static void process_user_custom_layer_time_check(void);
 
+static bool process_hmod_event(uint8_t no, bool pressed);
+
+#if 0
 // ƒRƒ“ƒ{ƒL[’è‹`
 enum combos {
   FS_LWIN,
@@ -120,6 +128,7 @@ combo_t key_combos[COMBO_COUNT] = {
   [JL_RALT] = COMBO(jl_ralt, KC_RALT),
   [JSCLN_RSFT] = COMBO(jscln_rsft, KC_RSFT),
 };
+#endif
 
 
 #if MATRIX_ROWS == 8 // HELIX_ROWS == 4
@@ -139,7 +148,7 @@ const keypos_t hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
 // “Æ©ƒŒƒCƒ„[’è‹`
 const uint8_t defMineKeyCode[MATRIX_ROWS][MATRIX_COLS] = LAYOUT(  \
    6,  0,  0,  0,  0,  0        ,  0,  0,  0,  0,  0,  7,       \
-   0,  0,  0,  0,  0,  0        ,  0,  0,  0,  0,  0,  0,       \
+  20, 19, 18, 17,  8,  0        ,  0,  9, 21, 22, 23, 24,       \
    0,  0,  0,  0,  0,  0        ,  0,  0,  0,  0,  0,  0,       \
    0,  0,  0,  0,  3,  1,  0,  5,  2,  4,  0,  0 , 0,  0        \
 );
@@ -150,6 +159,11 @@ const uint8_t defMineKeyCode[MATRIX_ROWS][MATRIX_COLS] = LAYOUT(  \
 #define K_S_Z   LSFT_T(KC_Z)
 #define K_S_SLS RSFT_T(JP_SLSH)
 #define K_S_BSL RSFT_T(JP_BSLS)
+#define K_OLWIN OSM(MOD_LGUI)     // LWINƒƒ“ƒVƒ‡ƒbƒg
+#define K_ORWIN OSM(MOD_RGUI)     // RWINƒƒ“ƒVƒ‡ƒbƒg
+#define K_OLALT OSM(MOD_LALT)     // LALTƒƒ“ƒVƒ‡ƒbƒg
+#define K_ORALT OSM(MOD_RALT)     // RALTƒƒ“ƒVƒ‡ƒbƒg
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_L_DEFAULT] = LAYOUT( \
@@ -160,7 +174,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+--------+--------+--------+--------.                 ,--------+--------+--------+--------+--------+--------.
         KC_LSFT, K_S_Z  , KC_X   , KC_C   , KC_V   , KC_B                     , KC_N   , KC_M   , KC_COMM, KC_DOT , K_S_SLS, K_S_BSL, \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
-        SH_MON , MO(8)  , KC_LWIN, KC_LALT,KC_BSPC , KC_SPC , KC_NO  , KC_NO  , KC_SPC , KC_ENT , KC_RALT, KC_RWIN, MO(9)  , SH_MON   \
+        SH_MON , MO(8)  , K_OLWIN, K_OLALT,KC_BSPC , KC_SPC , KC_NO  , KC_NO  , KC_SPC , KC_ENT , K_ORALT, K_ORWIN, MO(9)  , SH_MON   \
     //,--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------.
     ),
 
@@ -245,7 +259,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     const uint8_t row = record->event.key.row;
     const uint8_t no = defMineKeyCode[row][col];
     if(no) {
-      return process_user_custom_layer(keycode, record, no);
+      bool ret;
+      ret = process_hmod_event(no, record->event.pressed);
+      if(!ret) return false;
+      ret = process_user_custom_layer(keycode, record, no);
+      if(!ret) return false;
     }
   }
   
@@ -307,8 +325,15 @@ static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uin
     if ((record->event.time - ctrl->time) > def->tapping_term) {
       /* ‰‰ñ Down */
       if(!def->retro) { // Mod—Dæ‚ÍMod‘€ì‘€ì‚·‚é
-        layer_on(def->layer);
-        layer_cnt[def->layer]++;
+        if(!def->ownlayer) {
+          // qmk layer‚ğ•Ï‚¦‚é
+          layer_on(def->layer);
+          layer_cnt[def->layer]++;
+        }
+        else {
+          // own layer‚ğ•Ï‚¦‚é
+          gHmodLayer = def->layer;
+        }
       }
       
       // Downó‘Ô‚É‘Ò‚¿ˆ—•t‚«‚Å“ü‚é
@@ -332,9 +357,14 @@ static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uin
       /* Up */
       if (!def->retro) {  // Mod—Dæ‚ÍMod‘€ì‚·‚é
         /* ƒŒƒCƒ„[ƒL[‚ª‚·‚×‚Ä—£‚³‚ê‚½‚çƒŒƒCƒ„[‚ğOFF‚É‚·‚é */
-        layer_cnt[def->layer]--;
-        if(layer_cnt[def->layer] == 0) {
-          layer_off(def->layer);
+        if(!def->ownlayer) {
+          layer_cnt[def->layer]--;
+          if(layer_cnt[def->layer] == 0) {
+            layer_off(def->layer);
+          }
+        }
+        else {
+          gHmodLayer = 0;
         }
       }
       
@@ -346,9 +376,14 @@ static bool process_user_custom_layer(uint16_t keycode, keyrecord_t *record, uin
     }
     else if(ctrl->state == LayerStateModHold) {
       /* ƒŒƒCƒ„[ƒL[‚ª‚·‚×‚Ä—£‚³‚ê‚½‚çƒŒƒCƒ„[‚ğOFF‚É‚·‚é */
-      layer_cnt[def->layer]--;
-      if(layer_cnt[def->layer] == 0) {
-        layer_off(def->layer);
+      if(!def->ownlayer) {
+        layer_cnt[def->layer]--;
+        if(layer_cnt[def->layer] == 0) {
+          layer_off(def->layer);
+        }
+      }
+      else {
+        gHmodLayer = 0;
       }
       // ó‘Ô‘JˆÚ
       ctrl->state = LayerStateInit;
@@ -375,8 +410,13 @@ static bool process_user_custom_layer_otherkey_down(void) {
     
     if(def->retro) {
       // Hold—Dæ‚Í‚±‚±‚Å‰‚ß‚ÄMod‚ğ—LŒø‚É‚·‚é(¨’¼Œã‚ÉMod‘Î‰‚ÅlƒL[‚ª‰Ÿ‚³‚ê‚é)
-      layer_on(def->layer);
-      layer_cnt[def->layer]++;
+      if(!def->ownlayer) {
+        layer_on(def->layer);
+        layer_cnt[def->layer]++;
+      }
+      else {
+        gHmodLayer = def->layer;
+      }
     }
     else {
       // Mod—Dæ‚Í‰½‚à‚µ‚È‚¢
@@ -419,6 +459,141 @@ static void process_user_custom_layer_time_check(void) {
   else {
     // Šî€‚ğŒ»İ‚ÉXV‚·‚é
     layer_ctrl_time = timer_read();
+  }
+}
+
+
+#define MOD_LCTL MOD_BIT(KC_LCTL)
+#define MOD_LSFT MOD_BIT(KC_LSFT)
+#define MOD_LALT MOD_BIT(KC_LALT)
+#define MOD_LWIN MOD_BIT(KC_LWIN)
+#define MOD_RCTL MOD_BIT(KC_RCTL)
+#define MOD_RSFT MOD_BIT(KC_RSFT)
+#define MOD_RALT MOD_BIT(KC_RALT)
+#define MOD_RWIN MOD_BIT(KC_RWIN)
+
+// hmodƒL[‚Ìo—Í‚ğÀÛ‚És‚¤ŠÖ”
+static bool process_hmod_sendcode(uint8_t hmod_layer, uint8_t hmodno, bool pressed)
+{
+  switch(hmod_layer)
+  {
+  case 1:
+    if(pressed) {
+      switch(hmodno) {
+      case 1:
+        register_mods(MOD_LCTL);
+        break;
+      case 2:
+        register_mods(MOD_LSFT);
+        break;
+      case 3:
+        register_mods(MOD_LALT);
+        break;
+      case 4:
+        register_mods(MOD_LWIN);
+        break;
+      default:
+        return true;  // ˆ—’lŠO‚Ítrue
+      }
+    }
+    else {
+      switch(hmodno) {
+      case 1:
+        unregister_mods(MOD_LCTL);
+        break;
+      case 2:
+        unregister_mods(MOD_LSFT);
+        break;
+      case 3:
+        unregister_mods(MOD_LALT);
+        break;
+      case 4:
+        unregister_mods(MOD_LWIN);
+        break;
+      default:
+        return true;  // ˆ—’lŠO‚Ítrue
+      }
+    }
+    break;
+  case 2:
+    if(pressed) {
+      switch(hmodno) {
+      case 5:
+        register_mods(MOD_RCTL);
+        break;
+      case 6:
+        register_mods(MOD_RSFT);
+        break;
+      case 7:
+        register_mods(MOD_RALT);
+        break;
+      case 8:
+        register_mods(MOD_RWIN);
+        break;
+      default:
+        return true;  // ˆ—’lŠO‚Ítrue
+      }
+    }
+    else {
+      switch(hmodno) {
+      case 5:
+        unregister_mods(MOD_RCTL);
+        break;
+      case 6:
+        unregister_mods(MOD_RSFT);
+        break;
+      case 7:
+        unregister_mods(MOD_RALT);
+        break;
+      case 8:
+        unregister_mods(MOD_RWIN);
+        break;
+      default:
+        return true;  // ˆ—’lŠO‚Ítrue
+      }
+    }
+    break;
+  default:
+    return true;  // ˆ—’lŠO‚Ítrue
+  }
+  return false;
+}
+
+
+static bool process_hmod_event(uint8_t no, bool pressed)
+{
+  uint8_t hmodno = no - 16;
+  
+  // hmodƒL[‚Å‚È‚¯‚ê‚Î’ÊíƒL[‚Æ‚µ‚Äˆ—
+  if((no < 16) && (no >= (16 + (sizeof(gHmodLastLayer)/sizeof(gHmodLastLayer[0]))))) {
+    return true;
+  }
+  
+  // hmod‘ÎÛƒL[ˆ—
+  if(pressed) {
+    // ƒL[on
+    if(gHmodLayer) {
+      // layer‚ª—LŒø‚Èê‡‚ÍƒŒƒCƒ„[“®ì
+      gHmodLastLayer[hmodno] = gHmodLayer;  // on“®ì‚ÌƒŒƒCƒ„[‚ğ‹L˜^(off“®ì‚É‘Î‰“®ì‚ğ‚³‚¹‚é‚½‚ß)
+      return process_hmod_sendcode(gHmodLayer, hmodno, pressed);
+    }
+    else {
+      // ’ÊíƒL[‚Æ‚µ‚Ä“®ì
+      return true;
+    }
+  }
+  else {
+    // ƒL[off“®ì
+    uint8_t hmodLastLayer = gHmodLastLayer[hmodno];
+    if(hmodLastLayer) {
+      // hmod‚Ìoff“®ì‚ğ‚³‚¹‚Ä‰Šúó‘Ô‚É–ß‚·
+      gHmodLastLayer[hmodno] = 0;
+      return process_hmod_sendcode(hmodLastLayer, hmodno, pressed);
+    }
+    else {
+      // ’ÊíƒL[‚Æ‚µ‚Ä“®ì‚³‚¹‚é
+      return true;
+    }
   }
 }
 
