@@ -30,3 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
+
+// ユーザー定義
+#define TAPPING_TERM_PER_KEY      // キーごとにタッピング時間を設定
+#undef  PERMISSIVE_HOLD           // (無効)押した順番で動作させる
+#undef  IGNORE_MOD_TAP_INTERRUPT  
+#undef  TAPPING_FORCE_HOLD        
+
+#define COMBO_COUNT       6
+#define COMBO_TERM        10
+
+#define SWAP_HANDS_ENABLE       // スワップハンド有効化
+
+

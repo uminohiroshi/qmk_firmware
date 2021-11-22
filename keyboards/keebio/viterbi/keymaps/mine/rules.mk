@@ -1,1 +1,9 @@
 RGBLIGHT_ENABLE = yes
+
+# é©ï™ê›íË
+CONSOLE_ENABE		= no
+COMBO_ENABLE		= no
+MOUSEKY_ENABLE		= no
+TAP_DANCE_ENABLE	= no
+
+
