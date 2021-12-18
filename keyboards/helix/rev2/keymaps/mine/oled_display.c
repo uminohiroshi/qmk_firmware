@@ -27,12 +27,11 @@
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 enum layer_number {
-    _QWERTY = 0,
-    _COLEMAK,
-    _DVORAK,
-    _LOWER,
+    _DEFAULT = 0,
     _RAISE,
-    _ADJUST
+    _LOWER,
+    _ADJUST,
+    _L_MAX,  /* ÉåÉCÉÑÅ[ç≈ëÂêî */
 };
 
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
@@ -70,7 +69,7 @@ void matrix_update(struct CharacterMatrix *dest,
 #define L_LOWER (1<<_LOWER)
 #define L_RAISE (1<<_RAISE)
 #define L_ADJUST (1<<_ADJUST)
-#define L_ADJUST_TRI (L_ADJUST|L_RAISE|L_LOWER)
+//#define L_ADJUST_TRI (L_ADJUST|L_RAISE|L_LOWER)
 
 #    ifdef SSD1306OLED
 static void render_logo(struct CharacterMatrix *matrix) {
@@ -127,7 +126,7 @@ static void render_layer_status(void) {
         oled_write_P(PSTR("Lower"), false);
         break;
     case L_ADJUST:
-    case L_ADJUST_TRI:
+//    case L_ADJUST_TRI:
         oled_write_P(PSTR("Adjust"), false);
         break;
     default:
