@@ -21,62 +21,104 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 
-#include "keymap_jp.h"  // JPƒL[ƒ{[ƒhƒVƒ“ƒ{ƒ‹
+#include "keymap_jp.h"  // JPã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚·ãƒ³ãƒœãƒ«
 
 enum layer_number {
-    _QWERTY = 0,
+    _DEFAULT = 0,
     _RAISE,
     _LOWER,
+	_ADJUST,
+    _NUMKEYS,
+  	_L_MAX,  /* ãƒ¬ã‚¤ãƒ¤ãƒ¼æœ€å¤§æ•° */
 };
 
-#define K_R_SPC     LT(_RAISE, KC_SPC)   // raise + Space
-#define K_L_BS      LT(_LOWER, KC_BSPC)  // lower + BS
-#define K_L_ENT     LT(_LOWER, KC_ENT)   // lower + Enter
-#define K_C_CLN     RCTL_T(JP_COLN)     // CTL  + :
-#define K_S_BSL     RSFT_T(JP_BSLS)     // SFT  + "\"
-#define K_C_F13     LCTL_T(KC_F13)      // CTL  + F13(launcher)
-#define K_S_PSCR    LSFT_T(KC_PSCR)
+#define K_R_SPC     LT(_RAISE, KC_SPC)      // raise + Space
+#define K_L_BS      LT(_LOWER, KC_BSPC)     // lower + BS
+#define K_L_ENT     LT(_LOWER, KC_ENT)      // lower + Enter
+#define K_A_TAB     LT(_ADJUST, KC_TAB)     // adjust + tab
+#define K_A_AT      LT(_ADJUST, JP_AT)      // adjust + @
+#define K_N_SPC     LT(_NUMKEYS, KC_SPC)    // numkeys + Space
+#define K_C_CLN     RCTL_T(JP_COLN)         // CTL  + :
+#define K_S_BSL     RSFT_T(JP_BSLS)         // SFT  + "\"
 #define K_S_CIRC    RSFT_T(JP_CIRC)
 //KC_LCPO   LCTL + "
 //KC_RCPC   RCTL + '
-#define K_S_F       LSFT_T(KC_F)    // ƒz[ƒ€ƒ|ƒWƒVƒ‡ƒ“‚Éƒ‚ƒfƒBƒtƒ@ƒCƒA‚ğ’u‚¢‚Ä‚İ‚é
-#define K_S_J       RSFT_T(KC_J)    // ƒz[ƒ€ƒ|ƒWƒVƒ‡ƒ“‚Éƒ‚ƒfƒBƒtƒ@ƒCƒA‚ğ’u‚¢‚Ä‚İ‚é
+
+// ä¸‹æ®µãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢
+#define K_G_Z       LGUI_T(KC_Z)
+#define K_A_X       LALT_T(KC_X)
+#define K_C_C       LCTL_T(KC_C)
+#define K_S_V       LSFT_T(KC_V)
+
+#define K_S_M       RSFT_T(KC_M)
+#define K_C_COMM    RCTL_T(KC_COMM)
+#define K_A_DOT     RALT_T(KC_DOT)
+#define K_G_SLSH    RGUI_T(JP_SLSH)
+
+//
+#define K_A_PSCR    LALT(KC_PSCR)
+
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_QWERTY] = LAYOUT( \
+    [_DEFAULT] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        KC_TAB , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , JP_AT  ,
+        K_A_TAB, KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , K_A_AT ,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        K_C_F13, KC_A   , KC_S    , KC_D   , K_S_F   , KC_G   ,     KC_H   , K_S_J   , KC_K   , KC_L    , JP_SCLN, K_C_CLN,
+        KC_LCTL, KC_A   , KC_S    , KC_D   , KC_F    , KC_G   ,     KC_H   , KC_J    , KC_K   , KC_L    , JP_SCLN, K_C_CLN,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, K_S_BSL,
+        KC_LSFT, K_G_Z  , K_A_X   , K_C_C  , K_S_V   , KC_B   ,     KC_N   , K_S_M   ,K_C_COMM, K_A_DOT ,K_G_SLSH, K_S_BSL,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                          KC_LALT , K_L_BS , K_R_SPC , KC_LWIN,    KC_RWIN , K_R_SPC , K_L_ENT, KC_RALT 
+                          KC_LALT , K_L_BS , K_R_SPC , K_N_SPC,    K_N_SPC , K_R_SPC , K_L_ENT, KC_RALT 
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
-
+    
     [_RAISE] = LAYOUT( \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------
+       JP_PIPE , JP_DQUO, KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-       JP_PIPE , KC_F14 , KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL , \
+        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, KC_RCPC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-       KC_LCPO , JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, KC_RCPC, \
+        _______, JP_EXLM, JP_HASH , JP_DLR , JP_PERC , JP_TILD,    JP_UNDS , KC_ENT , JP_LCBR , JP_RCBR , JP_AMPR,K_S_CIRC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-       K_S_PSCR, JP_EXLM, JP_HASH , JP_DLR , JP_PERC , JP_TILD,    JP_UNDS , KC_ENT , JP_LCBR , JP_RCBR , JP_AMPR,K_S_CIRC, \
-    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-                          _______, _______, _______, _______,     _______, _______, _______, _______
-    //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+                           _______, _______,  _______, _______,     _______,  _______, _______,  _______
+    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
-
+    
     [_LOWER] = LAYOUT( \
-    //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-        KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,     KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , \
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        KC_LCTL,  JP_1  , JP_2   , JP_3   , JP_4   , JP_5   ,     JP_6   , JP_7   , JP_8   , JP_9   , JP_0   , KC_RCTL, \
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-        KC_LSFT, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, KC_RSFT, \
-    //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                          RESET  , _______, _______, _______,     _______, _______, _______, RESET
-    //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        KC_F12 , KC_F1  ,  KC_F2  , KC_F3  , KC_F4   , KC_F5  ,     KC_F6  , KC_F7   , KC_F8  , KC_F9   , KC_F10 , KC_F11 ,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______,  JP_1  , JP_2    , JP_3   , JP_4    , JP_5   ,     JP_6   , JP_7    , JP_8   , JP_9    , JP_0   , KC_RCTL,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______, KC_SPC , KC_SPC  , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_SPC  , KC_SPC , KC_RSFT,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+                          _______ , _______, _______ , _______,     _______, _______ , _______, _______
+    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+    ),
+    
+    [_NUMKEYS] = LAYOUT( \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        KC_TAB , KC_F9  , KC_F10  , KC_F11 , KC_F12  , KC_NO  ,     JP_LPRN, JP_7   ,  JP_8   , JP_9    , JP_MINS, JP_RPRN,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______, KC_F5  , KC_F6   , KC_F7  , KC_F8   , KC_ESC ,     JP_0   , JP_4    , JP_5   , JP_6    , JP_PLUS, KC_ENT ,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______, KC_F1  , KC_F2   , KC_F3  , KC_F4   , JP_EQL ,     JP_DOT , JP_1    , JP_2   , JP_3    , JP_ASTR, JP_SLSH,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+                          _______ , _______, _______ , _______,     _______, _______ , _______, _______ 
+    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+    ),
+    
+    [_ADJUST] = LAYOUT( \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+                          RESET   , _______, _______ , _______,     _______, _______ , _______, RESET
+    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 };
 
@@ -84,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void render_layer_state(void) {
     switch (get_highest_layer(layer_state)) {
-        case _QWERTY:
+        case _DEFAULT:
             oled_write_ln_P(PSTR("Layer: Default"), false);
             break;
         case _RAISE:
@@ -92,6 +134,12 @@ void render_layer_state(void) {
             break;
         case _LOWER:
             oled_write_ln_P(PSTR("Layer: Lower"), false);
+            break;
+        case _NUMKEYS:
+            oled_write_ln_P(PSTR("Layer: Numkeys"), false);
+            break;
+        case _ADJUST:
+            oled_write_ln_P(PSTR("Layer: Adjust"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Layer: Undefined"), false);
@@ -159,7 +207,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 
 
 /*----------------------------------------------------------------------------------*/
-/* hold“®ìŠÔ‚Ìİ’è(ewE¬wƒL[‚Í’·‚ß‚É‚·‚é)                                   */
+/* holdå‹•ä½œæ™‚é–“ã®è¨­å®š(è¦ªæŒ‡ãƒ»å°æŒ‡ã‚­ãƒ¼ã¯é•·ã‚ã«ã™ã‚‹)                                   */
 /*----------------------------------------------------------------------------------*/
 #define TAPPING_TERM_LONG   (300)
 
@@ -177,11 +225,11 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 
 /*----------------------------------------------------------------------------------*/
-/* layerƒL[‚ğ’ZŠÔ‚Årolling“ü—Í‚µ‚½‚Æ‚«layerƒL[‚Æ‚µ‚Ä“®ì‚³‚¹‚é                  */
-/* (İ’è•ÏX‚µ‚È‚¢‚Æ’ZŠÔ“ü—Í‚Ítap‚Æ‚µ‚Ä‰ğß‚³‚ê‚Ä‚µ‚Ü‚¤)                          */
+/* layerã‚­ãƒ¼ã‚’çŸ­æ™‚é–“ã§rollingå…¥åŠ›ã—ãŸã¨ãlayerã‚­ãƒ¼ã¨ã—ã¦å‹•ä½œã•ã›ã‚‹                  */
+/* (è¨­å®šå¤‰æ›´ã—ãªã„ã¨çŸ­æ™‚é–“å…¥åŠ›ã¯tapã¨ã—ã¦è§£é‡ˆã•ã‚Œã¦ã—ã¾ã†)                          */
 /*----------------------------------------------------------------------------------*/
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    // record‚Ì row, col‚ğg‚¤‚Æ³‚µ‚­”»’è‚Å‚«‚È‚¢‚Ì‚Å keycode‚ğg‚¤
+    // recordã® row, colã‚’ä½¿ã†ã¨æ­£ã—ãåˆ¤å®šã§ããªã„ã®ã§ keycodeã‚’ä½¿ã†
     // const uint8_t row = record->event.key.row;
     // const uint8_t col = record->event.key.col;
     
@@ -199,8 +247,8 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
 
 /*----------------------------------------------------------------------------------*/
-/* ƒ^ƒbƒsƒ“ƒO‹­§ƒz[ƒ‹ƒh–³‹                                                       */
-/* (tap¨hold‚Æ“ü—Í‚µ‚½‚É hold‹@”\‚Æ‚·‚é                                          */
+/* ã‚¿ãƒƒãƒ”ãƒ³ã‚°å¼·åˆ¶ãƒ›ãƒ¼ãƒ«ãƒ‰ç„¡è¦–                                                       */
+/* (tapâ†’holdã¨å…¥åŠ›ã—ãŸæ™‚ã« holdæ©Ÿèƒ½ã¨ã™ã‚‹)                                         */
 /*----------------------------------------------------------------------------------*/
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -215,13 +263,19 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 
 
 /*----------------------------------------------------------------------------------*/
-/* ƒ‚ƒbƒhƒ^ƒbƒvŠ„‚è‚İ‚Ì–³‹                                                       */
-/* (’ÊíƒL[‚É”z’u‚µ‚½ƒ‚ƒbƒhƒ^ƒbƒv‚ÍŠ„‚è‚İ‚ğ‹Ö~‚·‚é)                             */
+/* ãƒ¢ãƒƒãƒ‰ã‚¿ãƒƒãƒ—å‰²ã‚Šè¾¼ã¿ã®ç„¡è¦–                                                       */
+/* (é€šå¸¸ã‚­ãƒ¼ã«é…ç½®ã—ãŸãƒ¢ãƒƒãƒ‰ã‚¿ãƒƒãƒ—ã¯å‰²ã‚Šè¾¼ã¿ã‚’ç¦æ­¢ã™ã‚‹)                             */
 /*----------------------------------------------------------------------------------*/
 bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case K_S_F:
-    case K_S_J:
+    case K_G_Z:
+    case K_A_X:
+    case K_C_C:
+    case K_S_V:
+    case K_S_M:
+    case K_C_COMM:
+    case K_A_DOT:
+    case K_G_SLSH:
         return true;
         break;
     default:
@@ -231,18 +285,23 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
 
 
 /*----------------------------------------------------------------------------------*/
-/* ‹–—eƒz[ƒ‹ƒh                                                                     */
-/* (’ÊíƒL[‚É”z’u‚µ‚½ƒ‚ƒbƒhƒ^ƒbƒv‚Í‹–—eƒz[ƒ‹ƒhİ’è‚·‚é)                           */
+/* è¨±å®¹ãƒ›ãƒ¼ãƒ«ãƒ‰                                                                     */
+/* (é€šå¸¸ã‚­ãƒ¼ã«é…ç½®ã—ãŸãƒ¢ãƒƒãƒ‰ã‚¿ãƒƒãƒ—ã¯è¨±å®¹ãƒ›ãƒ¼ãƒ«ãƒ‰è¨­å®šã™ã‚‹)                           */
 /*----------------------------------------------------------------------------------*/
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case K_S_F:
-    case K_S_J:
+    case K_G_Z:
+    case K_A_X:
+    case K_C_C:
+    case K_S_V:
+    case K_S_M:
+    case K_C_COMM:
+    case K_A_DOT:
+    case K_G_SLSH:
         return true;
         break;
     default:
         return false;
     }
 }
-
 
