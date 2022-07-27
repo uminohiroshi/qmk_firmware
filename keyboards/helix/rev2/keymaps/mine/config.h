@@ -37,25 +37,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    //#define RGBLIGHT_EFFECT_ALTERNATING
 #endif
 
-// Ž©•ª—pƒJƒXƒ^ƒ}ƒCƒY
+// è‡ªåˆ†ç”¨ã‚«ã‚¹ã‚¿ãƒžã‚¤ã‚º
 #undef  TAPPING_TERM
 #undef  TAPPING_FORCE_HOLD
-#define TAPPING_TERM    200                 // ƒ^ƒbƒsƒ“ƒO”»’èŽžŠÔ
+#define TAPPING_TERM    300                 // ã‚¿ãƒƒãƒ”ãƒ³ã‚°åˆ¤å®šæ™‚é–“
 
-#define TAPPING_TERM_PER_KEY                // key–ˆ‚É tapping term‚ðØ‚è‘Ö‚¦‚é
-#define PERMISSIVE_HOLD_PER_KEY             // key–ˆ‚É ‹–—eƒz[ƒ‹ƒh‚ðÝ’è‚·‚é
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY     // key–ˆ‚É hold‹@”\—Dæ‚ðÝ’è‚·‚é
-#define IGNORE_MOD_TAP_INTERRUPT_PER_KEY    // key–ˆ‚É ƒ‚ƒbƒhƒ^ƒbƒvŠ„‚èž‚Ý–³Ž‹‚ðÝ’è‚·‚é
-#define TAPPING_FORCE_HOLD_PER_KEY          // key–ˆ‚É ƒ^ƒbƒsƒ“ƒO‹­§hold‚ðÝ’è‚·‚é
+#define TAPPING_TERM_PER_KEY                // keyæ¯Žã« tapping termã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+#define PERMISSIVE_HOLD_PER_KEY             // keyæ¯Žã« è¨±å®¹ãƒ›ãƒ¼ãƒ«ãƒ‰ã‚’è¨­å®šã™ã‚‹
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY     // keyæ¯Žã« holdæ©Ÿèƒ½å„ªå…ˆã‚’è¨­å®šã™ã‚‹
+#define IGNORE_MOD_TAP_INTERRUPT_PER_KEY    // keyæ¯Žã« ãƒ¢ãƒƒãƒ‰ã‚¿ãƒƒãƒ—å‰²ã‚Šè¾¼ã¿ç„¡è¦–ã‚’è¨­å®šã™ã‚‹
+#define TAPPING_FORCE_HOLD_PER_KEY          // keyæ¯Žã« ã‚¿ãƒƒãƒ”ãƒ³ã‚°å¼·åˆ¶holdã‚’è¨­å®šã™ã‚‹
 
 // LCTL + ", RCTL + '
-#define LCPO_KEYS   KC_LCTL, KC_LSFT, KC_2  // [LCTL] + ["]
+//#define LCPO_KEYS   KC_LCTL, KC_LSFT, KC_2  // [LCTL] + ["]
 #define RCPC_KEYS   KC_RCTL, KC_RSFT, KC_7  // [RCTL] + [']
 
-// COMBO‚ðŽg‚¤
+// COMBOã‚’ä½¿ã†
 #define COMBO_COUNT 6
 #define COMBO_TERM  10
 
-// ƒXƒƒbƒvƒnƒ“ƒh—LŒø‰»
+// ã‚¹ãƒ¯ãƒƒãƒ—ãƒãƒ³ãƒ‰æœ‰åŠ¹åŒ–
 #define SWAP_HANDS_ENABLE
 

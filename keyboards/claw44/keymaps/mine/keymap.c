@@ -32,12 +32,18 @@ enum layer_number {
   	_L_MAX,  /* レイヤー最大数 */
 };
 
+enum custom_keycodes {
+  K_Mac1 = SAFE_RANGE,
+};
+
+
 #define K_R_SPC     LT(_RAISE, KC_SPC)      // raise + Space
 #define K_L_BS      LT(_LOWER, KC_BSPC)     // lower + BS
 #define K_L_ENT     LT(_LOWER, KC_ENT)      // lower + Enter
 #define K_A_TAB     LT(_ADJUST, KC_TAB)     // adjust + tab
 #define K_A_AT      LT(_ADJUST, JP_AT)      // adjust + @
-#define K_N_SPC     LT(_NUMKEYS, KC_SPC)    // numkeys + Space
+#define K_N_F13     LT(_NUMKEYS, KC_F13)    // numkeys + F13
+#define K_N_F14     LT(_NUMKEYS, KC_F14)    // numkeys + F14
 #define K_C_CLN     RCTL_T(JP_COLN)         // CTL  + :
 #define K_S_BSL     RSFT_T(JP_BSLS)         // SFT  + "\"
 #define K_S_CIRC    RSFT_T(JP_CIRC)
@@ -69,10 +75,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
         KC_LSFT, K_G_Z  , K_A_X   , K_C_C  , K_S_V   , KC_B   ,     KC_N   , K_S_M   ,K_C_COMM, K_A_DOT ,K_G_SLSH, K_S_BSL,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                          KC_LALT , K_L_BS , K_R_SPC , K_N_SPC,    K_N_SPC , K_R_SPC , K_L_ENT, KC_RALT 
+                          KC_LALT , K_L_BS , K_R_SPC , K_N_F13,    K_N_F14 , K_R_SPC , K_L_ENT, KC_RALT
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
-    
+
     [_RAISE] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------
        JP_PIPE , JP_DQUO, KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL ,
@@ -84,19 +90,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                            _______, _______,  _______, _______,     _______,  _______, _______,  _______
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
-    
+
     [_LOWER] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         KC_F12 , KC_F1  ,  KC_F2  , KC_F3  , KC_F4   , KC_F5  ,     KC_F6  , KC_F7   , KC_F8  , KC_F9   , KC_F10 , KC_F11 ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______,  JP_1  , JP_2    , JP_3   , JP_4    , JP_5   ,     JP_6   , JP_7    , JP_8   , JP_9    , JP_0   , KC_RCTL,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_SPC , KC_SPC  , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_SPC  , KC_SPC , KC_RSFT,
+        _______, KC_SPC , KC_PAUS , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_LSCR , KC_SPC , KC_RSFT,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
                           _______ , _______, _______ , _______,     _______, _______ , _______, _______
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
-    
+
     [_NUMKEYS] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         KC_TAB , KC_F9  , KC_F10  , KC_F11 , KC_F12  , KC_NO  ,     JP_LPRN, JP_7   ,  JP_8   , JP_9    , JP_MINS, JP_RPRN,
@@ -105,13 +111,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_F1  , KC_F2   , KC_F3  , KC_F4   , JP_EQL ,     JP_DOT , JP_1    , JP_2   , JP_3    , JP_ASTR, JP_SLSH,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-                          _______ , _______, _______ , _______,     _______, _______ , _______, _______ 
+                          _______ , _______, _______ , _______,     _______, _______ , _______, _______
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
-    
+
     [_ADJUST] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , RESET  ,     RESET  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
@@ -195,6 +201,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         set_keylog(keycode, record);
     }
+
+    switch(keycode)
+    {
+        case K_Mac1:
+            if(record->event.pressed) {
+                // send all up events
+                tap_code(KC_LSFT);
+                tap_code(KC_LALT);
+                tap_code(KC_LWIN);
+                tap_code(KC_RCTL);
+                tap_code(KC_RSFT);
+                tap_code(KC_RALT);
+                tap_code(KC_RWIN);
+                tap_code(KC_LCTL);
+            }
+
+    }
+
     return true;
 }
 
@@ -232,11 +256,17 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     // recordの row, colを使うと正しく判定できないので keycodeを使う
     // const uint8_t row = record->event.key.row;
     // const uint8_t col = record->event.key.col;
-    
+
     switch(keycode) {
     case K_R_SPC:
     case K_L_BS:
     case K_L_ENT:
+    case K_N_F13:
+    case K_N_F14:
+    case K_A_TAB:
+    case K_A_AT:
+    case K_C_CLN:
+    case K_S_CIRC:
         return true;
         break;
     default:
@@ -255,6 +285,12 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case K_R_SPC:
     case K_L_BS:
     case K_L_ENT:
+    case K_N_F13:
+    case K_N_F14:
+    case K_A_TAB:
+    case K_A_AT:
+    case K_C_CLN:
+    case K_S_CIRC:
         return true;
     default:
         return false;

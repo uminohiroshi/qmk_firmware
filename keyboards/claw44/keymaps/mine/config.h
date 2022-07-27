@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OLED_FONT_H "keyboards/claw44/lib/glcdfont.c"
 
 // 自分用カスタマイズ
-#define TAPPING_TERM    300                 // タッピング判定時間
+#undef  TAPPING_TERM
+#undef  TAPPING_FORCE_HOLD
+#define TAPPING_TERM    200                 // タッピング判定時間
 
 #define TAPPING_TERM_PER_KEY                // key毎に tapping termを切り替える
 #define PERMISSIVE_HOLD_PER_KEY             // key毎に 許容ホールドを設定する
