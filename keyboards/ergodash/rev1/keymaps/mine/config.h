@@ -32,17 +32,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
-// ©•ª—pƒJƒXƒ^ƒ}ƒCƒY
+// è‡ªåˆ†ç”¨ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º
 #undef  TAPPING_TERM
 #undef  TAPPING_FORCE_HOLD
-#define TAPPING_TERM    200                 // ƒ^ƒbƒsƒ“ƒO”»’èŠÔ
+#define TAPPING_TERM    200                 // ã‚¿ãƒƒãƒ”ãƒ³ã‚°åˆ¤å®šæ™‚é–“
 
-#define TAPPING_TERM_PER_KEY                // key–ˆ‚É tapping term‚ğØ‚è‘Ö‚¦‚é
-#define PERMISSIVE_HOLD_PER_KEY             // key–ˆ‚É ‹–—eƒz[ƒ‹ƒh‚ğİ’è‚·‚é
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY     // key–ˆ‚É hold‹@”\—Dæ‚ğİ’è‚·‚é
-#define IGNORE_MOD_TAP_INTERRUPT_PER_KEY    // key–ˆ‚É ƒ‚ƒbƒhƒ^ƒbƒvŠ„‚è‚İ–³‹‚ğİ’è‚·‚é
-#define TAPPING_FORCE_HOLD_PER_KEY          // key–ˆ‚É ƒ^ƒbƒsƒ“ƒO‹­§hold‚ğİ’è‚·‚é
+#define TAPPING_TERM_PER_KEY                // keyæ¯ã« tapping termã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+#define PERMISSIVE_HOLD_PER_KEY             // keyæ¯ã« è¨±å®¹ãƒ›ãƒ¼ãƒ«ãƒ‰ã‚’è¨­å®šã™ã‚‹
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY     // keyæ¯ã« holdæ©Ÿèƒ½å„ªå…ˆã‚’è¨­å®šã™ã‚‹
+#define IGNORE_MOD_TAP_INTERRUPT_PER_KEY    // keyæ¯ã« ãƒ¢ãƒƒãƒ‰ã‚¿ãƒƒãƒ—å‰²ã‚Šè¾¼ã¿ç„¡è¦–ã‚’è¨­å®šã™ã‚‹
+#define TAPPING_FORCE_HOLD_PER_KEY          // keyæ¯ã« ã‚¿ãƒƒãƒ”ãƒ³ã‚°å¼·åˆ¶holdã‚’è¨­å®šã™ã‚‹
 
 // LCTL + ", RCTL + '
-#define LCPO_KEYS   KC_LCTL, KC_LSFT, KC_2  // [LCTL] + ["]
+//#define LCPO_KEYS   KC_LCTL, KC_LSFT, KC_2  // [LCTL] + ["]
 #define RCPC_KEYS   KC_RCTL, KC_RSFT, KC_7  // [RCTL] + [']
