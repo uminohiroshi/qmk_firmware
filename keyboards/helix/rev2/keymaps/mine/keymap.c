@@ -30,7 +30,7 @@
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 
-#include "keymap_jp.h"  // JPキーボードシンボル
+#include "keymap_japanese.h"  // JPキーボードシンボル
 
 enum layer_number {
     _DEFAULT = 0,
@@ -39,6 +39,11 @@ enum layer_number {
 	_ADJUST,
     _NUMKEYS,
   	_L_MAX,  /* レイヤー最大数 */
+};
+
+
+enum custom_keycodes {
+  K_Mac1 = SAFE_RANGE,
 };
 
 #define K_R_SPC     LT(_RAISE, KC_SPC)      // raise + Space
