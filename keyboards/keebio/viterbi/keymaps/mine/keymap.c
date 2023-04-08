@@ -1,6 +1,6 @@
 #include QMK_KEYBOARD_H
 
-#include "keymap_jp.h"		// 日本語キーボード用コードの取り込み
+#include "keymap_japanese.h"		// 日本語キーボード用コードの取り込み
 //#include "sendstring_jis.h"	// Sendstringの日本語対応
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
