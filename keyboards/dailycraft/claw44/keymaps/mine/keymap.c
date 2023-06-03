@@ -50,6 +50,17 @@ enum custom_keycodes {
 //KC_LCPO   LCTL + "
 //KC_RCPC   RCTL + '
 
+// home row mod
+#define K_G_A       LGUI_T(KC_A)
+#define K_A_S       LALT_T(KC_S)
+#define K_C_D       LCTL_T(KC_D)
+#define K_S_F       LSFT_T(KC_F)
+
+#define K_S_J       RSFT_T(KC_J)
+#define K_C_K       RCTL_T(KC_K)
+#define K_A_L       RALT_T(KC_L)
+#define K_G_SCLN    RGUI_T(JP_SCLN)
+
 // 下段モディファイア
 #define K_G_Z       LGUI_T(KC_Z)
 #define K_A_X       LALT_T(KC_X)
@@ -71,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         K_A_TAB, KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , K_A_AT ,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        KC_LCTL, KC_A   , KC_S    , KC_D   , KC_F    , KC_G   ,     KC_H   , KC_J    , KC_K   , KC_L    , JP_SCLN, K_C_CLN,
+        KC_LCTL, K_G_A  , K_A_S   , K_C_D  , K_S_F   , KC_G   ,     KC_H   , K_S_J   , K_C_K  , K_A_L   ,K_G_SCLN, K_C_CLN,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
         KC_LSFT, K_G_Z  , K_A_X   , K_C_C  , K_S_V   , KC_B   ,     KC_N   , K_S_M   ,K_C_COMM, K_A_DOT ,K_G_SLSH, K_S_BSL,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
@@ -83,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------
        JP_PIPE , JP_DQUO, KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, KC_RCPC,
+        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, SC_RCPC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, JP_EXLM, JP_HASH , JP_DLR , JP_PERC , JP_TILD,    JP_UNDS , KC_ENT , JP_LCBR , JP_RCBR , JP_AMPR,K_S_CIRC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
@@ -117,13 +128,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_ADJUST] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , RESET  ,     RESET  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , QK_RBT ,     QK_RBT , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-                          RESET   , _______, _______ , _______,     _______, _______ , _______, RESET
+                          QK_RBT  , _______, _______ , _______,     _______, _______ , _______, QK_RBT
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 };
@@ -297,29 +308,6 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 }
-
-
-/*----------------------------------------------------------------------------------*/
-/* モッドタップ割り込みの無視                                                       */
-/* (通常キーに配置したモッドタップは割り込みを禁止する)                             */
-/*----------------------------------------------------------------------------------*/
-bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-    case K_G_Z:
-    case K_A_X:
-    case K_C_C:
-    case K_S_V:
-    case K_S_M:
-    case K_C_COMM:
-    case K_A_DOT:
-    case K_G_SLSH:
-        return true;
-        break;
-    default:
-        return false;
-    }
-}
-
 
 /*----------------------------------------------------------------------------------*/
 /* 許容ホールド                                                                     */
