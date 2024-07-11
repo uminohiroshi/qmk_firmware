@@ -26,6 +26,8 @@ void housekeeping_task_kb(void) {
         max7219_message_sign_task(true);
         led_frame_timer = timer_read();
     }
+
+    matrix_scan_user();
 }
 #endif
 
