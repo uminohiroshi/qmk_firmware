@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:keyboards/ibm/model_m/yacobo/yacobo.c
 /* Copyright 2024 Stephen Edwards
+========
+/* Copyright 2020 GhostSeven <work@ghost7.com>
+>>>>>>>> e6c16a4719 (Convert `eeconfig_init_kb` implementations to config (#24087)):keyboards/handwired/bento/rev1/config.h
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +19,9 @@
  *
  * Adapted from the Model H Project by Jonathan Hawthorn.
  */
+#pragma once
 
+<<<<<<<< HEAD:keyboards/ibm/model_m/yacobo/yacobo.c
 #include "quantum.h"
 
 
@@ -24,3 +30,6 @@ void keyboard_pre_init_kb(void) {
     gpio_write_pin(BLUE_PILL_STATUS_LED, 0);
     keyboard_pre_init_user();
 }
+========
+#define RGBLIGHT_DEFAULT_MODE (RGBLIGHT_MODE_RAINBOW_SWIRL + 2)
+>>>>>>>> e6c16a4719 (Convert `eeconfig_init_kb` implementations to config (#24087)):keyboards/handwired/bento/rev1/config.h
