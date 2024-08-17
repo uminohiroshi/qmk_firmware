@@ -33,7 +33,7 @@ enum layer_number {
 };
 
 enum custom_keycodes {
-  K_Mac1 = SAFE_RANGE,
+  K_ModC1r = SAFE_RANGE,    // 全Modifierをクリア
 };
 
 
@@ -43,9 +43,10 @@ enum custom_keycodes {
 #define K_A_TAB     LT(_ADJUST, KC_TAB)     // adjust + tab
 #define K_A_AT      LT(_ADJUST, JP_AT)      // adjust + @
 #define K_N_F13     LT(_NUMKEYS, KC_F13)    // numkeys + F13
+#define K_N_LEAD    TD(LEAD_LAYR)           // numkeys + LEADER
 #define K_N_F14     LT(_NUMKEYS, KC_F14)    // numkeys + F14
 #define K_C_CLN     RCTL_T(JP_COLN)         // CTL  + :
-#define K_S_BSL     RSFT_T(JP_BSLS)         // SFT  + "\"
+#define K_S_BSL     RSFT_T(JP_BSLS)         // SFT  + "
 #define K_S_CIRC    RSFT_T(JP_CIRC)
 //KC_LCPO   LCTL + "
 //KC_RCPC   RCTL + '
@@ -76,7 +77,46 @@ enum custom_keycodes {
 #define K_A_PSCR    LALT(KC_PSCR)
 
 
+#ifdef DYNAMIC_MACRO_ENABLE
+/*----------------------------------------------------------------------------------*/
+/* for Dynamic Macro                                                                */
+/*----------------------------------------------------------------------------------*/
+bool isRecording = false;
+#endif // DYNAMIC_MACRO_ENABLE
 
+/*----------------------------------------------------------------------------------*/
+/* for Tap-Dance                                                                    */
+/*----------------------------------------------------------------------------------*/
+// Define a type for as many tap dance states as you need
+typedef enum {
+    TD_NONE,
+    TD_UNKNOWN,
+    TD_SINGLE_TAP,
+    TD_SINGLE_HOLD,
+    TD_DOUBLE_TAP
+} td_state_t;
+
+typedef struct {
+    bool is_press_action;
+    td_state_t state;
+} td_tap_t;
+
+enum {
+    LEAD_LAYR, // Our custom tap dance key; add any other tap dance keys to this enum
+};
+
+// Declare the functions to be used with your tap dance key(s)
+
+// Function associated with all tap dances
+td_state_t cur_dance(tap_dance_state_t *state);
+
+// Functions associated with individual tap dances
+void ql_finished(tap_dance_state_t *state, void *user_data);
+void ql_reset(tap_dance_state_t *state, void *user_data);
+
+/*----------------------------------------------------------------------------------*/
+/* KeyMap                                                                           */
+/*----------------------------------------------------------------------------------*/
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_DEFAULT] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
@@ -86,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
         KC_LSFT, K_G_Z  , K_A_X   , K_C_C  , K_S_V   , KC_B   ,     KC_N   , K_S_M   ,K_C_COMM, K_A_DOT ,K_G_SLSH, K_S_BSL,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                          KC_LALT , K_L_BS , K_R_SPC , K_N_F13,    K_N_F14 , K_R_SPC , K_L_ENT, KC_RALT
+                          KC_LALT , K_L_BS , K_R_SPC ,K_N_F13 ,    K_N_F14 , K_R_SPC , K_L_ENT, KC_RALT
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 
@@ -94,7 +134,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------
        JP_PIPE , JP_DQUO, KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, SC_RCPC,
+        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , QK_REP  , QK_AREP, SC_RCPC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, JP_EXLM, JP_HASH , JP_DLR , JP_PERC , JP_TILD,    JP_UNDS , KC_ENT , JP_LCBR , JP_RCBR , JP_AMPR,K_S_CIRC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
@@ -104,11 +144,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_LOWER] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        KC_F12 , KC_F1  ,  KC_F2  , KC_F3  , KC_F4   , KC_F5  ,     KC_F6  , KC_F7   , KC_F8  , KC_F9   , KC_F10 , KC_F11 ,
+        KC_F12 ,  KC_F1  , KC_F2  , KC_F3  , KC_F4   , KC_F5  ,     KC_F6  , KC_F7   , KC_F8  , KC_F9   , KC_F10 , KC_F11 ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______,  JP_1  , JP_2    , JP_3   , JP_4    , JP_5   ,     JP_6   , JP_7    , JP_8   , JP_9    , JP_0   , KC_RCTL,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_SPC , KC_PAUS , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_LSCR , KC_SPC , KC_RSFT,
+        _______, KC_INS , KC_PAUS , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_LSCR ,K_ModC1r, KC_RSFT,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
                           _______ , _______, _______ , _______,     _______, _______ , _______, _______
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
@@ -116,11 +156,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NUMKEYS] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        KC_TAB , KC_F9  , KC_F10  , KC_F11 , KC_F12  , KC_NO  ,     JP_LPRN, JP_7   ,  JP_8   , JP_9    , JP_MINS, JP_RPRN,
-    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_F5  , KC_F6   , KC_F7  , KC_F8   , KC_ESC ,     JP_0   , JP_4    , JP_5   , JP_6    , JP_PLUS, KC_ENT ,
-    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_F1  , KC_F2   , KC_F3  , KC_F4   , JP_EQL ,     JP_DOT , JP_1    , JP_2   , JP_3    , JP_ASTR, JP_SLSH,
+        KC_TAB , DM_REC1, DM_REC2 , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , KC_NO  ,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+-------- +--------+--------+--------.
+        _______, DM_PLY1, DM_PLY2 , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , KC_NO  ,
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+------- -+--------+--------+--------.
+        _______, DM_RSTP, DM_RSTP , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , KC_NO  ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
                           _______ , _______, _______ , _______,     _______, _______ , _______, _______
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
@@ -128,13 +168,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_ADJUST] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , QK_RBT ,     QK_RBT , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , QK_BOOT,     QK_BOOT, KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-                          QK_RBT  , _______, _______ , _______,     _______, _______ , _______, QK_RBT
+                          QK_BOOT , _______, _______ , _______,     _______, _______ , _______, QK_BOOT
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 };
@@ -160,6 +200,7 @@ void render_layer_state(void) {
             break;
         default:
             oled_write_ln_P(PSTR("Layer: Undefined"), false);
+            break;
     }
 }
 
@@ -181,7 +222,7 @@ void set_keylog(uint16_t keycode, keyrecord_t *record) {
     }
 
     // update keylog
-    snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c", record->event.key.row, record->event.key.col, keycode, name);
+    snprintf(keylog_str, sizeof(keylog_str), "%dx%d 0x%04x:%c", record->event.key.row, record->event.key.col, keycode, name);
 
     // update keylogs
     if (keylogs_str_idx == sizeof(keylogs_str) - 1) {
@@ -201,6 +242,9 @@ const char *read_keylogs(void) { return keylogs_str; }
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_layer_state();
+        #ifdef DYNAMIC_MACRO_ENABLE
+        oled_write_ln_P(PSTR("REC"), isRecording);  // DYNAMIC MACRO
+        #endif // DYNAMIC_MACRO_ENABLE
         oled_write_ln(read_keylog(), false);
         oled_write_ln(read_keylogs(), false);
     } else {
@@ -216,19 +260,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     switch(keycode)
     {
-        case K_Mac1:
+        case K_ModC1r:
             if(record->event.pressed) {
                 // send all up events
-                tap_code(KC_LSFT);
-                tap_code(KC_LALT);
-                tap_code(KC_LWIN);
-                tap_code(KC_RCTL);
-                tap_code(KC_RSFT);
-                tap_code(KC_RALT);
-                tap_code(KC_RWIN);
-                tap_code(KC_LCTL);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LWIN);
+                unregister_code(KC_RCTL);
+                unregister_code(KC_RSFT);
+                unregister_code(KC_RALT);
+                unregister_code(KC_RWIN);
+                unregister_code(KC_LCTL);
             }
-
+            break;
+        default:
+            break;
     }
 
     return true;
@@ -255,6 +301,12 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
     else {
         return TAPPING_TERM;
+        switch (keycode) {
+        case QK_TAP_DANCE ... QK_TAP_DANCE_MAX:
+            return 275;
+        default:
+            return TAPPING_TERM;
+        }
     }
 }
 
@@ -270,14 +322,20 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     // const uint8_t col = record->event.key.col;
 
     switch(keycode) {
+    // thumb row
     case K_R_SPC:
     case K_L_BS:
     case K_L_ENT:
     case K_N_F13:
+    case K_N_LEAD:
     case K_N_F14:
+    // top row
     case K_A_TAB:
     case K_A_AT:
+    // home row
     case K_C_CLN:
+    // low row
+    case K_S_BSL:
     case K_S_CIRC:
         return true;
         break;
@@ -287,7 +345,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-
+#if 0
 /*----------------------------------------------------------------------------------*/
 /* タッピング強制ホールド無視                                                       */
 /* (tap→holdと入力した時に hold機能とする)                                         */
@@ -298,6 +356,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case K_L_BS:
     case K_L_ENT:
     case K_N_F13:
+    case K_N_LEAD:
     case K_N_F14:
     case K_A_TAB:
     case K_A_AT:
@@ -308,6 +367,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 }
+#endif
 
 /*----------------------------------------------------------------------------------*/
 /* 許容ホールド                                                                     */
@@ -315,6 +375,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 /*----------------------------------------------------------------------------------*/
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+    // low row mod
     case K_G_Z:
     case K_A_X:
     case K_C_C:
@@ -323,6 +384,15 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     case K_C_COMM:
     case K_A_DOT:
     case K_G_SLSH:
+    // home row mod
+    case K_G_A:
+    case K_A_S:
+    case K_C_D:
+    case K_S_F:
+    case K_S_J:
+    case K_C_K:
+    case K_A_L:
+    case K_G_SCLN:
         return true;
         break;
     default:
@@ -330,3 +400,95 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+#ifdef DYNAMIC_MACRO_ENABLE
+/*----------------------------------------------------------------------------------*/
+/* Dynamic Macro                                                                    */
+/*----------------------------------------------------------------------------------*/
+// Triggered when you start recording a macro.
+void dynamic_macro_record_start_user(int8_t direction) {
+    isRecording = true;
+}
+
+// Triggered when the macro recording is stopped.
+void dynamic_macro_record_end_user(int8_t direction) {
+    isRecording = false;
+}
+#endif // DYNAMIC_MACRO_ENABLE
+
+/*----------------------------------------------------------------------------------*/
+/* leader-key                                                                       */
+/*----------------------------------------------------------------------------------*/
+void leader_start_user(void) {
+    // Do something when the leader key is pressed
+}
+
+void leader_end_user(void) {
+    {
+        /* 通常キーは [F13]+[キー]にして送る */
+        uint16_t kc;
+        for( kc=KC_A; kc<=KC_0; kc++) {
+            if (leader_sequence_one_key(kc)) {
+                register_code(KC_F13);
+                tap_code(kc);
+                unregister_code(KC_F13);
+                break;
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------------------*/
+/* TapDance                                                                         */
+/*----------------------------------------------------------------------------------*/
+// Determine the current tap dance state
+td_state_t cur_dance(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (!state->pressed) return TD_SINGLE_TAP;
+        else return TD_SINGLE_HOLD;
+    } else if (state->count == 2) return TD_DOUBLE_TAP;
+    else return TD_UNKNOWN;
+};
+
+// Initialize tap structure associated with example tap dance key
+static td_tap_t ql_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void ql_finished(tap_dance_state_t *state, void *user_data) {
+    ql_tap_state.state = cur_dance(state);
+    switch (ql_tap_state.state) {
+        case TD_SINGLE_TAP:
+            leader_start();
+            break;
+        case TD_SINGLE_HOLD:
+            layer_on(_NUMKEYS);
+            break;
+        case TD_DOUBLE_TAP:
+            // Check to see if the layer is already set
+            if (layer_state_is(_NUMKEYS)) {
+                // If already set, then switch it off
+                layer_off(_NUMKEYS);
+            } else {
+                // If not already set, then switch the layer on
+                layer_on(_NUMKEYS);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void ql_reset(tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (ql_tap_state.state == TD_SINGLE_HOLD) {
+        layer_off(_NUMKEYS);
+    }
+    ql_tap_state.state = TD_NONE;
+}
+
+// Associate our tap dance key with its functionality
+tap_dance_action_t tap_dance_actions[] = {
+    [LEAD_LAYR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ql_finished, ql_reset)
+};

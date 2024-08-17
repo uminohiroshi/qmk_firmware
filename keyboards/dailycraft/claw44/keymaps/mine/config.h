@@ -21,6 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MASTER_LEFT
 #define OLED_FONT_H "keyboards/dailycraft/claw44/lib/glcdfont.c"
 
+//#define DEBOUNCE                    10     // キーチャタリング対策
+
+#define LEADER_TIMEOUT              1000    // LEADER_PER_KEY_TIMEOUT使うときのmax=300
+#define LEADER_NO_TIMEOUT                   // 先頭のキーはタイムアウトなし
+
+#define DYNAMIC_MACRO_DELAY         20      // 再生delay
+
+
 // 自分用カスタマイズ
 #undef  TAPPING_TERM
 #undef  TAPPING_FORCE_HOLD
