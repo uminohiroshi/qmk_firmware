@@ -32,6 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
+#define SPLIT_USB_DETECT
+
+#define DYNAMIC_MACRO_DELAY         20      // 再生delay
+#define DYNAMIC_KEYMAP_LAYER_COUNT  6
+
 // 自分用カスタマイズ
 #undef  TAPPING_TERM
 #undef  TAPPING_FORCE_HOLD
@@ -40,9 +45,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_TERM_PER_KEY                // key毎に tapping termを切り替える
 #define PERMISSIVE_HOLD_PER_KEY             // key毎に 許容ホールドを設定する
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY     // key毎に hold機能優先を設定する
-#define IGNORE_MOD_TAP_INTERRUPT_PER_KEY    // key毎に モッドタップ割り込み無視を設定する
-#define TAPPING_FORCE_HOLD_PER_KEY          // key毎に タッピング強制holdを設定する
+//#define TAPPING_FORCE_HOLD_PER_KEY          // key毎に タッピング強制holdを設定する
 
 // LCTL + ", RCTL + '
 //#define LCPO_KEYS   KC_LCTL, KC_LSFT, KC_2  // [LCTL] + ["]
 #define RCPC_KEYS   KC_RCTL, KC_RSFT, KC_7  // [RCTL] + [']
+
+// combo
+#define COMBO_TERM          10
+#define COMBO_STRICT_TIMER
+#define COMBO_TERM_PER_COMBO

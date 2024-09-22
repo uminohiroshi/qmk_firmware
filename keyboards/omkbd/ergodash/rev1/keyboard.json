@@ -3,7 +3,7 @@
     "manufacturer": "Omkbd",
     "maintainer": "qmk",
     "usb": {
-        "vid": "0xFEED",
+        "vid": "0x7D05",
         "pid": "0x6060",
         "device_version": "1.0.0"
     },
