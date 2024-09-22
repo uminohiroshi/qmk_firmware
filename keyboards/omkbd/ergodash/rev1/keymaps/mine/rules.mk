@@ -1,3 +1,12 @@
+# deault
 BACKLIGHT_ENABLE = no
 RGBLIGHT_ENABLE = no
 AUDIO_ENABLE = no
+
+# added setteing
+VIA_ENABLE = yes
+EXTRAKEY_ENABLE = yes
+MOUSEKEY_ENABLE = yes
+COMBO_ENABLE = yes
+
+CONSOLE_ENABLE = NO
