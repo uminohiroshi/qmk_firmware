@@ -56,4 +56,5 @@
     ],    "cmake.configureOnOpen": false,
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.defaultProfile.windows": "QMK MSYS",
+    "makefile.configureOnOpen": false,
 }
