@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "keymap_japanese.h"  // JPキーボードシンボル
 
+#define TAPPING_TERM_LONG   (300)
+
 enum layer_number {
     _DEFAULT = 0,
     _RAISE,
@@ -33,7 +35,8 @@ enum layer_number {
 };
 
 enum custom_keycodes {
-  K_ModC1r = SAFE_RANGE,    // 全Modifierをクリア
+  K_ModClr = SAFE_RANGE,    // 全Modifierをクリア
+  K_SPC_SPECIAL,            // spaceリピートが出来ないので代替
 };
 
 
@@ -43,7 +46,7 @@ enum custom_keycodes {
 #define K_A_TAB     LT(_ADJUST, KC_TAB)     // adjust + tab
 #define K_A_AT      LT(_ADJUST, JP_AT)      // adjust + @
 #define K_N_F13     LT(_NUMKEYS, KC_F13)    // numkeys + F13
-#define K_N_LEAD    TD(LEAD_LAYR)           // numkeys + LEADER
+//#define K_N_LEAD    TD(LEAD_LAYR)           // numkeys + LEADER
 #define K_N_F14     LT(_NUMKEYS, KC_F14)    // numkeys + F14
 #define K_C_CLN     RCTL_T(JP_COLN)         // CTL  + :
 #define K_S_BSL     RSFT_T(JP_BSLS)         // SFT  + "
@@ -56,34 +59,50 @@ enum custom_keycodes {
 #define K_A_S       LALT_T(KC_S)
 #define K_C_D       LCTL_T(KC_D)
 #define K_S_F       LSFT_T(KC_F)
+#define K_CS_G      C_S_T(KC_G)     // LSFT+LCTL
 
+#define K_CS_H      RCS_T(KC_H)     // RSFT+RCTL
 #define K_S_J       RSFT_T(KC_J)
 #define K_C_K       RCTL_T(KC_K)
 #define K_A_L       RALT_T(KC_L)
 #define K_G_SCLN    RGUI_T(JP_SCLN)
 
 // 下段モディファイア
-#define K_G_Z       LGUI_T(KC_Z)
-#define K_A_X       LALT_T(KC_X)
-#define K_C_C       LCTL_T(KC_C)
-#define K_S_V       LSFT_T(KC_V)
+//#define K_G_Z       LGUI_T(KC_Z)
+//#define K_A_X       LALT_T(KC_X)
+//#define K_C_C       LCTL_T(KC_C)
+//#define K_S_V       LSFT_T(KC_V)
 
-#define K_S_M       RSFT_T(KC_M)
-#define K_C_COMM    RCTL_T(KC_COMM)
-#define K_A_DOT     RALT_T(KC_DOT)
-#define K_G_SLSH    RGUI_T(JP_SLSH)
+//#define K_S_M       RSFT_T(KC_M)
+//#define K_C_COMM    RCTL_T(KC_COMM)
+//#define K_A_DOT     RALT_T(KC_DOT)
+//#define K_G_SLSH    RGUI_T(JP_SLSH)
 
 //
 #define K_A_PSCR    LALT(KC_PSCR)
 
 
-#ifdef DYNAMIC_MACRO_ENABLE
+#if 0 //DYNAMIC_MACRO_ENABLE
 /*----------------------------------------------------------------------------------*/
 /* for Dynamic Macro                                                                */
 /*----------------------------------------------------------------------------------*/
 bool isRecording = false;
 #endif // DYNAMIC_MACRO_ENABLE
 
+
+// swap hand
+const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
+  {{0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {5, 4}},
+  {{0, 5}, {1, 5}, {2, 5}, {3, 5}, {4, 5}, {5, 5}},
+  {{0, 6}, {1, 6}, {2, 6}, {3, 6}, {4, 6}, {5, 6}},
+  {{0, 7}, {1, 7}, {2, 7}, {3, 7}, {4, 7}, {5, 7}},
+  {{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}},
+  {{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}},
+  {{0, 2}, {1, 2}, {2, 2}, {3, 2}, {4, 2}, {5, 2}},
+  {{0, 3}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}},
+};
+
+#if 0
 /*----------------------------------------------------------------------------------*/
 /* for Tap-Dance                                                                    */
 /*----------------------------------------------------------------------------------*/
@@ -113,6 +132,224 @@ td_state_t cur_dance(tap_dance_state_t *state);
 // Functions associated with individual tap dances
 void ql_finished(tap_dance_state_t *state, void *user_data);
 void ql_reset(tap_dance_state_t *state, void *user_data);
+#endif
+
+// for Combo
+// left side : left-right
+const uint16_t PROGMEM cmb_tr[]       = {KC_T,     KC_R,     COMBO_END};
+const uint16_t PROGMEM cmb_gf[]       = {K_CS_G,   K_S_F,    COMBO_END};
+const uint16_t PROGMEM cmb_bv[]       = {KC_B,     KC_V,     COMBO_END};
+const uint16_t PROGMEM cmb_re[]       = {KC_R,     KC_E,     COMBO_END};
+const uint16_t PROGMEM cmb_fd[]       = {K_S_F,    K_C_D,    COMBO_END};
+const uint16_t PROGMEM cmb_vc[]       = {KC_V,     KC_C,     COMBO_END};
+const uint16_t PROGMEM cmb_ew[]       = {KC_E,     KC_W,     COMBO_END};
+const uint16_t PROGMEM cmb_ds[]       = {K_C_D,    K_A_S,    COMBO_END};
+const uint16_t PROGMEM cmb_cx[]       = {KC_C,     KC_X,     COMBO_END};
+const uint16_t PROGMEM cmb_wq[]       = {KC_W,     KC_Q,     COMBO_END};
+const uint16_t PROGMEM cmb_sa[]       = {K_A_S,    K_G_A,    COMBO_END};
+const uint16_t PROGMEM cmb_xz[]       = {KC_X,     KC_Z,     COMBO_END};
+
+// left size : diagonally above
+const uint16_t PROGMEM cmb_gr[]       = {K_CS_G,   KC_R,     COMBO_END};
+const uint16_t PROGMEM cmb_bf[]       = {KC_B,     K_S_F,    COMBO_END};
+const uint16_t PROGMEM cmb_fe[]       = {K_S_F,    KC_E,     COMBO_END};
+const uint16_t PROGMEM cmb_vd[]       = {KC_V,     K_C_D,    COMBO_END};
+const uint16_t PROGMEM cmb_es[]       = {KC_E,     K_A_S,    COMBO_END};
+const uint16_t PROGMEM cmb_dx[]       = {K_C_D,    KC_X,     COMBO_END};
+const uint16_t PROGMEM cmb_wa[]       = {KC_W,     K_G_A,    COMBO_END};
+const uint16_t PROGMEM cmb_sz[]       = {K_A_S,    KC_Z,     COMBO_END};
+
+// right side : left-right
+const uint16_t PROGMEM cmb_yu[]       = {KC_Y,     KC_U,     COMBO_END};
+const uint16_t PROGMEM cmb_hj[]       = {K_CS_H,   K_S_J,    COMBO_END};
+const uint16_t PROGMEM cmb_nm[]       = {KC_N,     KC_M,     COMBO_END};
+const uint16_t PROGMEM cmb_ui[]       = {KC_U,     KC_I,     COMBO_END};
+const uint16_t PROGMEM cmb_jk[]       = {K_S_J,    K_C_K,    COMBO_END};
+const uint16_t PROGMEM cmb_mcomm[]    = {KC_M,     KC_COMM,  COMBO_END};
+const uint16_t PROGMEM cmb_io[]       = {KC_I,     KC_O,     COMBO_END};
+const uint16_t PROGMEM cmb_kl[]       = {K_C_K,    K_A_L,    COMBO_END};
+const uint16_t PROGMEM cmb_commdot[]  = {KC_COMM,  KC_DOT,   COMBO_END};
+const uint16_t PROGMEM cmb_op[]       = {KC_O,     KC_P,     COMBO_END};
+const uint16_t PROGMEM cmb_lscln[]    = {K_A_L,    K_G_SCLN, COMBO_END};
+const uint16_t PROGMEM cmb_dotslsh[]  = {KC_DOT,   KC_SLSH,  COMBO_END};
+
+// left size : diagonally above
+const uint16_t PROGMEM cmb_hu[]       = {K_CS_H,   KC_U,     COMBO_END};
+const uint16_t PROGMEM cmb_nj[]       = {KC_N,     K_S_J,    COMBO_END};
+const uint16_t PROGMEM cmb_ji[]       = {K_S_J,    KC_I,     COMBO_END};
+const uint16_t PROGMEM cmb_mk[]       = {KC_M,     K_C_K,    COMBO_END};
+const uint16_t PROGMEM cmb_il[]       = {KC_I,     K_A_L,    COMBO_END};
+const uint16_t PROGMEM cmb_kdot[]     = {K_C_K,    KC_DOT,   COMBO_END};
+const uint16_t PROGMEM cmb_oscln[]    = {KC_O,     K_G_SCLN, COMBO_END};
+const uint16_t PROGMEM cmb_lslsh[]    = {K_A_L,    KC_SLSH,  COMBO_END};
+
+
+// left side : up-down
+const uint16_t PROGMEM cmb_tg[]       = {KC_T,     K_CS_G,   COMBO_END};
+const uint16_t PROGMEM cmb_gb[]       = {K_CS_G,   KC_B,     COMBO_END};
+const uint16_t PROGMEM cmb_rf[]       = {KC_R,     K_S_F,    COMBO_END};
+const uint16_t PROGMEM cmb_fv[]       = {K_S_F,    KC_V,     COMBO_END};
+const uint16_t PROGMEM cmb_ed[]       = {KC_E,     K_C_D,    COMBO_END};
+const uint16_t PROGMEM cmb_dc[]       = {K_C_D,    KC_C,     COMBO_END};
+const uint16_t PROGMEM cmb_ws[]       = {KC_W,     K_A_S,    COMBO_END};
+const uint16_t PROGMEM cmb_sx[]       = {K_A_S,    KC_X,     COMBO_END};
+const uint16_t PROGMEM cmb_qa[]       = {KC_Q,     K_G_A,    COMBO_END};
+const uint16_t PROGMEM cmb_az[]       = {K_G_A,    KC_Z,     COMBO_END};
+const uint16_t PROGMEM cmb_tablctl[]  = {K_A_TAB,  KC_LCTL,  COMBO_END};
+const uint16_t PROGMEM cmb_lctllsft[] = {KC_LCTL,  KC_LSFT,  COMBO_END};
+
+// right side : up-down
+const uint16_t PROGMEM cmb_yh[]       = {KC_Y,     K_CS_H,   COMBO_END};
+const uint16_t PROGMEM cmb_hn[]       = {K_CS_H,   KC_N,     COMBO_END};
+const uint16_t PROGMEM cmb_uj[]       = {KC_U,     K_S_J,    COMBO_END};
+const uint16_t PROGMEM cmb_jm[]       = {K_S_J,    KC_M,     COMBO_END};
+const uint16_t PROGMEM cmb_ik[]       = {KC_I,     K_C_K,    COMBO_END};
+const uint16_t PROGMEM cmb_kcomm[]    = {K_C_K,    KC_COMM,  COMBO_END};
+const uint16_t PROGMEM cmb_ol[]       = {KC_O,     K_A_L,    COMBO_END};
+const uint16_t PROGMEM cmb_ldot[]     = {K_A_L,    KC_DOT,   COMBO_END};
+const uint16_t PROGMEM cmb_pscln[]    = {KC_P,     K_G_SCLN, COMBO_END};
+const uint16_t PROGMEM cmb_sclnslsh[] = {K_G_SCLN, KC_SLSH,  COMBO_END};
+const uint16_t PROGMEM cmb_atcln[]    = {K_A_AT,   K_C_CLN,  COMBO_END};
+const uint16_t PROGMEM cmb_clnbsl[]   = {K_C_CLN,  K_S_BSL,  COMBO_END};
+
+combo_t key_combos[] = {
+    // quick-speed left-side
+    COMBO(cmb_re, KC_ENT),
+    COMBO(cmb_fd, QK_REPEAT_KEY),
+    COMBO(cmb_vc, LCTL(KC_V)),
+
+    // quick-speed right-side
+    COMBO(cmb_ui, KC_BSPC),
+    COMBO(cmb_jk, JP_LPRN),
+    COMBO(cmb_mcomm, JP_LBRC),
+
+    // middle-speed left-side
+    COMBO(cmb_ew, KC_ESC),
+    COMBO(cmb_ds, KC_TAB),
+    COMBO(cmb_cx, LCTL(KC_C)),
+
+    // middle-speed right-side
+    COMBO(cmb_io, KC_DEL),
+    COMBO(cmb_kl, JP_RPRN),
+    COMBO(cmb_commdot, JP_RBRC),
+
+    // 上下 left-side
+    COMBO(cmb_tg, JP_PERC),
+    COMBO(cmb_gb, JP_TILD),
+    COMBO(cmb_rf, JP_DLR),
+    COMBO(cmb_fv, JP_EQL),
+    COMBO(cmb_ed, JP_HASH),
+    COMBO(cmb_dc, JP_BSLS),
+    COMBO(cmb_ws, JP_AT),
+    COMBO(cmb_sx, LSFT(JP_AT)),
+    COMBO(cmb_qa, JP_EXLM),
+
+    // 上下 right-side
+    COMBO(cmb_yh, JP_CIRC),
+    COMBO(cmb_hn, JP_UNDS),
+    COMBO(cmb_uj, JP_PLUS),
+    COMBO(cmb_jm, JP_MINS),
+    COMBO(cmb_ik, JP_ASTR),
+    COMBO(cmb_kcomm, JP_SLSH),
+    COMBO(cmb_ol, JP_AMPR),
+    COMBO(cmb_ldot, JP_PIPE),
+};
+
+uint16_t get_combo_term(uint16_t index, combo_t *combo) {
+    uint16_t combo_term = COMBO_TERM;
+    bool need_continue = false;
+    switch(combo->keycode) {
+        // quick-speed left-side
+        case KC_ENT:
+        case QK_REPEAT_KEY:
+        case LCTL(KC_V):
+            combo_term = 25;
+            break;
+
+        // quick-speed right-side
+        case KC_BSPC:
+        case JP_LPRN:
+        case JP_LBRC:
+            combo_term = 25;
+            break;
+
+        // middle-speed left-side
+        case KC_ESC:
+        case KC_TAB:
+        case LCTL(KC_C):
+            combo_term = 50;
+            break;
+
+        // middle-speed left-side
+        case KC_DEL:
+        case JP_RPRN:
+        case JP_RBRC:
+            combo_term = 50;
+            break;
+
+        // 上下 left-side
+        case JP_PERC:
+        case JP_TILD:
+        case JP_DLR:
+        case JP_EQL:
+        case JP_HASH:
+        case JP_BSLS:
+        case JP_AT:
+        case LSFT(JP_AT):
+        case JP_EXLM:
+            combo_term=100;   // 上下comoboは受付長くする。
+            break;
+
+        // 上下 right-side
+        case JP_CIRC:
+        case JP_UNDS:
+        case JP_PLUS:
+        case JP_MINS:
+        case JP_ASTR:
+        case JP_SLSH:
+        case JP_AMPR:
+        case JP_PIPE:
+            combo_term=100;   // 上下comoboは受付長くする。
+            break;
+        default:
+            need_continue = true;
+    }
+
+    if(need_continue) {
+        switch(combo->keys[0]) {
+            // 小指
+            case KC_Q:
+            case K_G_A:
+            case KC_Z:
+            case KC_P:
+            case K_G_SCLN:
+            case KC_SLSH:
+                combo_term = 50;
+            // 薬指
+            case KC_W:
+            case K_A_S:
+            case KC_X:
+            case KC_O:
+            case K_A_L:
+            case KC_DOT:
+                combo_term = 50;
+            // 中指
+            case KC_E:
+            case K_C_D:
+            case KC_C:
+            case KC_I:
+            case K_C_K:
+            case KC_COMM:
+                combo_term = 25;
+            // その他
+            default:
+                combo_term = COMBO_TERM;
+        }
+    }
+
+    return combo_term;
+}
+
 
 /*----------------------------------------------------------------------------------*/
 /* KeyMap                                                                           */
@@ -122,9 +359,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         K_A_TAB, KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , K_A_AT ,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        KC_LCTL, K_G_A  , K_A_S   , K_C_D  , K_S_F   , KC_G   ,     KC_H   , K_S_J   , K_C_K  , K_A_L   ,K_G_SCLN, K_C_CLN,
+        KC_LCTL, K_G_A  , K_A_S   , K_C_D  , K_S_F   , K_CS_G ,     K_CS_H , K_S_J   , K_C_K  , K_A_L   ,K_G_SCLN, K_C_CLN,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-        KC_LSFT, K_G_Z  , K_A_X   , K_C_C  , K_S_V   , KC_B   ,     KC_N   , K_S_M   ,K_C_COMM, K_A_DOT ,K_G_SLSH, K_S_BSL,
+        KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  ,KC_SLSH, K_S_BSL,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
                           KC_LALT , K_L_BS , K_R_SPC ,K_N_F13 ,    K_N_F14 , K_R_SPC , K_L_ENT, KC_RALT
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
@@ -134,7 +371,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------
        JP_PIPE , JP_DQUO, KC_HOME , KC_UP  , KC_END  , KC_PGUP,    JP_LBRC , JP_LPRN , JP_RPRN, JP_RBRC , JP_MINS, JP_EQL ,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , QK_REP  , QK_AREP, SC_RCPC,
+        _______, JP_ZKHK, KC_LEFT , KC_DOWN, KC_RGHT , KC_PGDN,    KC_BSPC , KC_ESC  , KC_DEL , JP_HENK , JP_MHEN, SC_RCPC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, JP_EXLM, JP_HASH , JP_DLR , JP_PERC , JP_TILD,    JP_UNDS , KC_ENT , JP_LCBR , JP_RCBR , JP_AMPR,K_S_CIRC,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
@@ -148,7 +385,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______,  JP_1  , JP_2    , JP_3   , JP_4    , JP_5   ,     JP_6   , JP_7    , JP_8   , JP_9    , JP_0   , KC_RCTL,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_INS , KC_PAUS , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_LSCR ,K_ModC1r, KC_RSFT,
+        _______, KC_INS , KC_PAUS , KC_F14 , KC_F13  , KC_PSCR,    K_A_PSCR, KC_F13  , KC_F14 , KC_LSCR ,K_ModClr, KC_RSFT,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
                           _______ , _______, _______ , _______,     _______, _______ , _______, _______
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
@@ -170,7 +407,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , QK_BOOT,     QK_BOOT, KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
+        _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , SH_TOGG,     SH_TOGG, KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
         _______, KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  ,     KC_NO  , KC_NO   , KC_NO  , KC_NO   , KC_NO  , _______,
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
@@ -242,8 +479,9 @@ const char *read_keylogs(void) { return keylogs_str; }
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_layer_state();
-        #ifdef DYNAMIC_MACRO_ENABLE
+        #if 0 // DYNAMIC_MACRO_ENABLE
         oled_write_ln_P(PSTR("REC"), isRecording);  // DYNAMIC MACRO
+
         #endif // DYNAMIC_MACRO_ENABLE
         oled_write_ln(read_keylog(), false);
         oled_write_ln(read_keylogs(), false);
@@ -253,14 +491,33 @@ bool oled_task_user(void) {
     return false;
 }
 
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    if (!is_keyboard_master()) return OLED_ROTATION_180;
+    return rotation;
+}
+#endif
+
+
+
+#define TIME_MEASURE_MAX    (32000u)
+#define TIME_DIFF_NONE      (0xffffu)
+uint16_t lastEventTime;
+bool isTimeMeasuring = false;
+
+/*----------------------------------------------------------------------------------*/
+/* キーon/off時の独自処理                                                               */
+/*----------------------------------------------------------------------------------*/
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef OLED_ENABLE
+    // OLED出力
     if (record->event.pressed) {
         set_keylog(keycode, record);
     }
+#endif
 
     switch(keycode)
     {
-        case K_ModC1r:
+        case K_ModClr:
             if(record->event.pressed) {
                 // send all up events
                 unregister_code(KC_LSFT);
@@ -273,25 +530,54 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LCTL);
             }
             break;
+        case K_SPC_SPECIAL:
+            if(record->event.pressed) {
+                register_code(KC_SPC);
+            }
+            else {
+                unregister_code(KC_SPC);
+            }
+            break;
         default:
             break;
+    }
+
+    {
+        uint16_t    diff_time;
+        if(isTimeMeasuring) {
+            diff_time = timer_elapsed(lastEventTime);
+        }
+        else {
+            diff_time = TIME_DIFF_NONE;
+        }
+
+        // 次回計測準備
+        lastEventTime = timer_read();
+        isTimeMeasuring = true;
+
+        // シリアル出力
+        if (record->event.pressed) {
+            uprintf("%d,%d,%d,0x%x,d\n", diff_time, record->event.key.row, record->event.key.col, keycode);
+        } else {
+            uprintf("%d,%d,%d,0x%x,u\n", diff_time, record->event.key.row, record->event.key.col, keycode);
+        }
     }
 
     return true;
 }
 
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) return OLED_ROTATION_180;
-    return rotation;
+
+void matrix_scan_user(void) {
+   if (isTimeMeasuring
+      && timer_elapsed(lastEventTime) > TIME_MEASURE_MAX)
+   {
+      isTimeMeasuring = false;
+   }
 }
-
-#endif
-
 
 /*----------------------------------------------------------------------------------*/
 /* hold動作時間の設定(親指・小指キーは長めにする)                                   */
 /*----------------------------------------------------------------------------------*/
-#define TAPPING_TERM_LONG   (300)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     const uint8_t row = record->event.key.row;
@@ -327,7 +613,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     case K_L_BS:
     case K_L_ENT:
     case K_N_F13:
-    case K_N_LEAD:
+    //case K_N_LEAD:
     case K_N_F14:
     // top row
     case K_A_TAB:
@@ -345,29 +631,6 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-#if 0
-/*----------------------------------------------------------------------------------*/
-/* タッピング強制ホールド無視                                                       */
-/* (tap→holdと入力した時に hold機能とする)                                         */
-/*----------------------------------------------------------------------------------*/
-bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-    case K_R_SPC:
-    case K_L_BS:
-    case K_L_ENT:
-    case K_N_F13:
-    case K_N_LEAD:
-    case K_N_F14:
-    case K_A_TAB:
-    case K_A_AT:
-    case K_C_CLN:
-    case K_S_CIRC:
-        return true;
-    default:
-        return false;
-    }
-}
-#endif
 
 /*----------------------------------------------------------------------------------*/
 /* 許容ホールド                                                                     */
@@ -376,14 +639,14 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
     // low row mod
-    case K_G_Z:
-    case K_A_X:
-    case K_C_C:
-    case K_S_V:
-    case K_S_M:
-    case K_C_COMM:
-    case K_A_DOT:
-    case K_G_SLSH:
+    //case K_G_Z:
+    //case K_A_X:
+    //case K_C_C:
+    //case K_S_V:
+    //case K_S_M:
+    //case K_C_COMM:
+    //case K_A_DOT:
+    //case K_G_SLSH:
     // home row mod
     case K_G_A:
     case K_A_S:
@@ -393,6 +656,10 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     case K_C_K:
     case K_A_L:
     case K_G_SCLN:
+    // space
+    //case K_R_SPC:
+    //case K_L_BS:
+    //case K_L_ENT:
         return true;
         break;
     default:
@@ -400,7 +667,7 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-#ifdef DYNAMIC_MACRO_ENABLE
+#if 0 // DYNAMIC_MACRO_ENABLE
 /*----------------------------------------------------------------------------------*/
 /* Dynamic Macro                                                                    */
 /*----------------------------------------------------------------------------------*/
@@ -415,6 +682,7 @@ void dynamic_macro_record_end_user(int8_t direction) {
 }
 #endif // DYNAMIC_MACRO_ENABLE
 
+#if 0 /* LEADER key */
 /*----------------------------------------------------------------------------------*/
 /* leader-key                                                                       */
 /*----------------------------------------------------------------------------------*/
@@ -436,7 +704,9 @@ void leader_end_user(void) {
         }
     }
 }
+#endif
 
+#if 0 /* TAP_DANCE */
 /*----------------------------------------------------------------------------------*/
 /* TapDance                                                                         */
 /*----------------------------------------------------------------------------------*/
@@ -492,3 +762,4 @@ void ql_reset(tap_dance_state_t *state, void *user_data) {
 tap_dance_action_t tap_dance_actions[] = {
     [LEAD_LAYR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ql_finished, ql_reset)
 };
+#endif
