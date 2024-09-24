@@ -36,7 +36,6 @@ enum layer_number {
 
 enum custom_keycodes {
   K_ModClr = SAFE_RANGE,    // 全Modifierをクリア
-  K_SPC_SPECIAL,            // spaceリピートが出来ないので代替
 };
 
 
@@ -263,28 +262,28 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case KC_ENT:
         case QK_REPEAT_KEY:
         case LCTL(KC_V):
-            combo_term = 25;
+            combo_term = 15;
             break;
 
         // quick-speed right-side
         case KC_BSPC:
         case JP_LPRN:
         case JP_LBRC:
-            combo_term = 25;
+            combo_term = 15;
             break;
 
         // middle-speed left-side
         case KC_ESC:
         case KC_TAB:
         case LCTL(KC_C):
-            combo_term = 50;
+            combo_term = 25;
             break;
 
         // middle-speed left-side
         case KC_DEL:
         case JP_RPRN:
         case JP_RBRC:
-            combo_term = 50;
+            combo_term = 25;
             break;
 
         // 上下 left-side
@@ -498,11 +497,12 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #endif
 
 
-
+#ifdef KEY_LOGGING
 #define TIME_MEASURE_MAX    (32000u)
 #define TIME_DIFF_NONE      (0xffffu)
 uint16_t lastEventTime;
 bool isTimeMeasuring = false;
+#endif
 
 /*----------------------------------------------------------------------------------*/
 /* キーon/off時の独自処理                                                               */
@@ -530,18 +530,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LCTL);
             }
             break;
-        case K_SPC_SPECIAL:
-            if(record->event.pressed) {
-                register_code(KC_SPC);
-            }
-            else {
-                unregister_code(KC_SPC);
-            }
-            break;
         default:
             break;
     }
 
+#ifdef KEY_LOGGING
     {
         uint16_t    diff_time;
         if(isTimeMeasuring) {
@@ -557,23 +550,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         // シリアル出力
         if (record->event.pressed) {
-            uprintf("%d,%d,%d,0x%x,d\n", diff_time, record->event.key.row, record->event.key.col, keycode);
+            uprintf("%d,%d,%d,%d,d\n", record->event.key.row, record->event.key.col, keycode, diff_time);
         } else {
-            uprintf("%d,%d,%d,0x%x,u\n", diff_time, record->event.key.row, record->event.key.col, keycode);
+            uprintf("%d,%d,%d,%d,u\n", record->event.key.row, record->event.key.col, keycode, diff_time);
         }
     }
+#endif
 
     return true;
 }
 
 
+#ifdef KEY_LOGGING
 void matrix_scan_user(void) {
    if (isTimeMeasuring
-      && timer_elapsed(lastEventTime) > TIME_MEASURE_MAX)
-   {
+      && (timer_elapsed(lastEventTime) > TIME_MEASURE_MAX)
+   ) {
       isTimeMeasuring = false;
    }
 }
+#endif
 
 /*----------------------------------------------------------------------------------*/
 /* hold動作時間の設定(親指・小指キーは長めにする)                                   */
