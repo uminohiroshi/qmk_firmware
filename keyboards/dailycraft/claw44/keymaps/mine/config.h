@@ -50,3 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define COMBO_TERM          10
 #define COMBO_STRICT_TIMER
 #define COMBO_TERM_PER_COMBO
+
+// keylogger
+// #define KEY_LOGGING
