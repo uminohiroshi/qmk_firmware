@@ -232,6 +232,16 @@ combo_t key_combos[] = {
     COMBO(cmb_kl, JP_RPRN),
     COMBO(cmb_commdot, JP_RBRC),
 
+    // slow-speed left-side
+    COMBO(cmb_wq, KC_TAB),
+    COMBO(cmb_sa, KC_LCTL),
+    COMBO(cmb_xz, KC_LSFT),
+
+    // slow-speed right-side
+    COMBO(cmb_op, JP_AT),
+    COMBO(cmb_lscln, JP_COLN),
+    COMBO(cmb_dotslsh, JP_BSLS),
+
     // 上下 left-side
     COMBO(cmb_tg, JP_PERC),
     COMBO(cmb_gb, JP_TILD),
@@ -276,14 +286,28 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case KC_ESC:
         case KC_TAB:
         case LCTL(KC_C):
-            combo_term = 25;
+            combo_term = 15;
             break;
 
         // middle-speed left-side
         case KC_DEL:
         case JP_RPRN:
         case JP_RBRC:
-            combo_term = 25;
+            combo_term = 15;
+            break;
+
+        // slow speed left side
+        //case KC_TAB:
+        case KC_LCTL:
+        case KC_LSFT:
+            combo_term = 30;
+            break;
+
+        // slow speed right side
+        //case JP_AT:
+        case JP_COLN:
+        //case JP_BSLS:
+            combo_term = 30;
             break;
 
         // 上下 left-side
