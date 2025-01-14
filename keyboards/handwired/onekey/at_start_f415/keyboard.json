@@ -21,4 +21,8 @@
         "data_pin": "B0",
         "clock_pin": "B1"
     }
+    "apa102": {
+        "data_pin": "B0",
+        "clock_pin": "B1"
+    }
 }
