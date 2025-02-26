@@ -36,6 +36,11 @@
             "propertyNames": {"$ref": "./definitions.jsonschema#/snake_case"},
             "not": {"required": ["lto"]}
         }
+        "features_config": {
+            "$ref": "qmk.definitions.v1#/boolean_array",
+            "propertyNames": {"$ref": "qmk.definitions.v1#/snake_case"},
+            "not": {"required": ["lto"]}
+        },
     },
     "type": "object",
     "not": {"required": ["vendorId", "productId"]}, // reject via keys...
@@ -479,6 +484,12 @@
                 },
                 "cols": {"$ref": "./definitions.jsonschema#/mcu_pin_array"},
                 "rows": {"$ref": "./definitions.jsonschema#/mcu_pin_array"}
+            }
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
         "modules": {
