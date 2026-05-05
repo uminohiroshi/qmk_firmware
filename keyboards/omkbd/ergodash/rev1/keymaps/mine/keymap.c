@@ -24,7 +24,7 @@ enum custom_keycodes {
 #define K_A_AT      LT(_ADJUST, JP_AT)      // adjust + @
 #define K_N_F13     LT(_NAVI, KC_F13)       // navi + F13
 //#define K_N_LEAD    TD(LEAD_LAYR)           // LEADER
-#define K_N_F14     LT(_NAVI, KC_F14)       // navi + F14
+#define K_N_F14     LT(_NAVI, KC_F14)      // navi2 + F14
 #define K_C_CLN     RCTL_T(JP_COLN)         // CTL + :
 #define K_S_BSL     RSFT_T(JP_BSLS)         // SFT + "\"
 #define K_S_CIRC    RSFT_T(JP_CIRC)         // SFT + "^"
@@ -127,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+--------+--------+--------+--------+--------+                          .--------+--------+--------+--------+--------+--------+--------.
         KC_LCTL, K_G_A  , K_A_S  , K_C_D  , K_S_F  , K_CS_G , KC_INS                            , JP_RBRC, K_CS_H , K_S_J  , K_C_K  , K_A_L  ,K_G_SCLN, K_C_CLN,
     //,--------+--------+--------+--------+--------+--------+--------+                          .--------+--------+--------+--------+--------+--------+--------.
-        KC_LSFT, K_G_Z  , K_A_X  , K_C_C  , K_S_V  , K_CS_B , KC_NO                             , KC_NO  , K_CS_H , K_S_M  ,K_C_COMM, K_A_DOT,K_G_SLSH, K_S_BSL,
+        KC_LSFT, K_G_Z  , K_A_X  , K_C_C  , K_S_V  , K_CS_B , KC_NO                             , KC_NO  , K_CS_N , K_S_M  ,K_C_COMM, K_A_DOT,K_G_SLSH, K_S_BSL,
     //,--------+--------+--------+--------+--------+--------+--------+--------+        .--------+--------+--------+--------+--------+--------+--------+--------.
         KC_LCTL, KC_LALT, KC_LWIN, KC_LALT         , K_R_BS , K_L_SPC, K_N_F13         , K_N_F14, K_L_SPC, K_R_ENT         , KC_RALT, KC_RWIN, KC_RALT, KC_RCTL
     //,--------+--------+--------+--------+--------+--------+--------+--------+        .--------+--------+--------+--------+--------+--------+--------+--------.

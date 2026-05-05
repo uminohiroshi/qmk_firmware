@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // 自分用カスタマイズ
-#define TAP_CODE_DELAY  5
+#define TAP_CODE_DELAY  10
 #undef  TAPPING_TERM
 #undef  TAPPING_FORCE_HOLD
 #define TAPPING_TERM    200                 // タッピング判定時間

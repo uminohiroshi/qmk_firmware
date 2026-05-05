@@ -1,17 +1,19 @@
-VIA_ENABLE = yes
-OLED_ENABLE = no        # メモリ不足なので無効化
+# keyboard固有設定
+OLED_ENABLE = no        	# OLED無効
 
-# 有効キーを広げる
-EXTRAKEY_ENABLE = yes
-MOUSEKEY_ENABLE = no	# メモリ不足なので無効化
+# 個人設定 #############################################################
+LTO_ENABLE = yes			# ROM削減のため
+VIA_ENABLE = yes			# VIA有効
 
 # 機能
-COMBO_ENABLE = yes
-SWAP_HANDS_ENABLE = yes		# swap hands
+MOUSEKEY_ENABLE = yes		# マウス操作有効
+EXTRAKEY_ENABLE = yes		# マルチメディアキー有効
+COMBO_ENABLE = yes			# combo
+SWAP_HANDS_ENABLE = yes		# swap hands 有効
 REPEAT_KEY_ENABLE = yes		# repeat key
 
-CONSOLE_ENABLE = yes		# シリアル有効化
+DYNAMIC_MACRO_ENABLE = no	# 動的マクロ無効
+LEADER_ENABLE = no			# leaderキー無効
+TAP_DANCE_ENABLE = no		# tap dance無効
 
-DYNAMIC_MACRO_ENABLE = no
-LEADER_ENABLE = no
-TAP_DANCE_ENABLE = no
+CONSOLE_ENABLE = no			# シリアル無効
